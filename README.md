@@ -17,6 +17,11 @@ netsurf
 
 ## A fazer
 Certificar o funcionamento em todos os modos de tela
+
+CGA 640×200, 16,    4:5
+
+EGA 640×350, 16bpp, 1:1,37
+
 VGA 640x480, 32bpp, 4:3
 
 SVGA 800x600, 32bpp, 4:3
