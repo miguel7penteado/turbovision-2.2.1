@@ -31,6 +31,10 @@ gitbook init
 # Gere a estrutura html
 gitbook install && gitbook build
 
+# Apagando temporários
+git clean -fx node_modules
+git clean -fx _book
+
 # adicione tudo que você criou
 git add -A
 
@@ -56,6 +60,10 @@ git checkout gh-pages
 
 # Gere a estrutura html
 gitbook install && gitbook build
+
+# Apagar arquivos temporários
+git clean -fx node_modules
+git clean -fx _book
 
 # adicione tudo que você criou
 git add -A
