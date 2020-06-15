@@ -6,7 +6,7 @@
 
 # Documentação do projeto
 
-Site está em [!http://miguel7penteado@github.io/turbovision-2.2.1](http://miguel7penteado@github.io/turbovision-2.2.1)
+Site está em [!http://miguel7penteado.github.io/turbovision-2.2.1](http://miguel7penteado.github.io/turbovision-2.2.1)
 
 ## Criando Documentação
 ```bash
