@@ -8,7 +8,33 @@
 
 Site está em [!http://miguel7penteado.github.io/turbovision-2.2.1](http://miguel7penteado.github.io/turbovision-2.2.1)
 
-## Criando Documentação
+## Criando Documentação:
+Pode-se utilizar o cliente javascript node **gitbook-cli** do site [http://www.gitbook.com/](http://www.gitbook.com/) para gerar
+modelos (esqueletos) para gerar o site de documentação.
+
+Convém preservar a instalação original dos pacotes do seu sistema operacional, então nada melhor
+que instalar que instalar qualquer extensões javascript node no diretório do usuário.
+Segue a configuração no perfil de um usuário linux.
+```bash
+# crie um diretório para instalar extensões no perfil do usuário
+mkdir -p ~/.node
+
+# defina um prefixo de instalação no perfil do usuário
+npm config set prefix=$HOME/.node
+
+# ensine o sistema operacional a buscar os binários das extensões neste diretório de usuário
+export PATH=$HOME/.node/bin:$PATH
+
+# grave a variável de ambiente para carregar toda vez que o usuário logar.
+echo "export PATH=$HOME/.node/bin:$PATH" > .bashrc
+```
+
+Agora pode instalar o cliente **gitbook-cli**:
+```bash
+npm install -g gitbook-cli
+```
+Por fim segue como criar o "site gitbook" a partir dos arquivos markdown (.md) que estão no ramo principal (master)
+do seu projeto previamente criado no github.
 ```bash
 # Clone o repositório remoto
 git clone <endereço_repositorio_github>
