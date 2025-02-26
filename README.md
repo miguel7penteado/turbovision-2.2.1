@@ -33,7 +33,7 @@ O local original do projeto do editor de texto "turbinado" é https://github.com
 * [Aplicações que estão usando o Borland Turbo Vision](#applications)
 * [Suporte a caracteres Unicode](#unicode)
 * [Interação com a área de transferência](#clipboard)
-* [Extended color support](#color)
+* [Suporte estendido de cores](#color)
 
 <div id="what-for"></div>
 
