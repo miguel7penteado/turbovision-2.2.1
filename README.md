@@ -219,7 +219,7 @@ Desculpe, o makefile raiz assume que ele é executado a partir do diretório `pr
 
 ### Vcpkg
 
-Turbo Vision can be built and installed using the [vcpkg](https://github.com/Microsoft/vcpkg/) dependency manager:
+O Turbo Vision pode ser criado e instalado usando o gerenciador de dependências [vcpkg](https://github.com/Microsoft/vcpkg/):
 
 ```sh
 git clone https://github.com/Microsoft/vcpkg.git
@@ -229,25 +229,25 @@ cd vcpkg
 ./vcpkg install tvision
 ```
 
-The `tvision` port in vcpkg is kept up to date by Microsoft team members and community contributors. If you find it to be out of date, please [create an issue or pull request](https://github.com/Microsoft/vcpkg) in the vcpkg repository.
+A porta `tvision` no vcpkg é mantida atualizada pelos membros da equipe da Microsoft e pelos contribuidores da comunidade. Se você achar que ela está desatualizada, [crie um problema ou pull request](https://github.com/Microsoft/vcpkg) no repositório vcpkg.The `tvision` port in vcpkg is kept up to date by Microsoft team members and community contributors. If you find it to be out of date, please [create an issue or pull request](https://github.com/Microsoft/vcpkg) in the vcpkg repository.
 
 <div id="build-cmake"></div>
 
-### Turbo Vision as a CMake dependency (not Borland C++)
+### Turbo Vision como uma dependência do CMake (não Borland C++)
 
-If you choose the CMake build system for your application, there are two main ways to link against Turbo Vision:
+Se você escolher o sistema de compilação CMake para seu aplicativo, há duas maneiras principais de vincular ao Turbo Vision:
 
-* Installing Turbo Vision and importing it with `find_package`. Installation depends on the generator type:
+* Instalando o Turbo Vision e importando-o com `find_package`. A instalação depende do tipo de gerador:
 
-    * First, decide an install prefix. The default one will work out-of-the-box, but usually requires admin privileges. On Unix systems, you can use `$HOME/.local` instead. On Windows, you can use any custom path you want but you'll have to add it to the `CMAKE_PREFIX_PATH` environment variable when building your application.
-    * For mono-config generators (`Unix Makefiles`, `Ninja`...), you only have to build and install once:
+    * Primeiro, decida um prefixo de instalação. O padrão funcionará imediatamente, mas geralmente requer privilégios de administrador. Em sistemas Unix, você pode usar `$HOME/.local` em vez disso. No Windows, você pode usar qualquer caminho personalizado que desejar, mas terá que adicioná-lo à variável de ambiente `CMAKE_PREFIX_PATH` ao construir seu aplicativo.
+    * Para geradores mono-config (`Unix Makefiles`, `Ninja`...), você só precisa compilar e instalar uma vez:
 
         ```sh
         cmake . -B ./build # '-DCMAKE_INSTALL_PREFIX=...' to override the install prefix.
         cmake --build ./build
         cmake --install ./build
         ```
-    * For multi-config generators (`Visual Studio`, `Ninja Multi-Config`...) you should build and install all configurations:
+    * Para geradores multi-config (`Visual Studio`, `Ninja Multi-Config`...) você deve construir e instalar todas as configurações:
 
         ```sh
         cmake . -B ./build # '-DCMAKE_INSTALL_PREFIX=...' to override the install prefix.
@@ -260,68 +260,68 @@ If you choose the CMake build system for your application, there are two main wa
         cmake --install ./build --config RelWithDebInfo --component library
         cmake --install ./build --config MinSizeRel --component library
         ```
-    Then, in your application's `CMakeLists.txt`, you may import it like this:
+    Então, no `CMakeLists.txt` do seu aplicativo, você pode importá-lo assim:
     ```cmake
     find_package(tvision CONFIG)
     target_link_libraries(my_application tvision::tvision)
     ```
 
-* Have Turbo Vision in a submodule in your repository and import it with `add_subdirectory`:
+* Tenha o Turbo Vision em um submódulo no seu repositório e importe-o com `add_subdirectory`:
 
 
     ```cmake
-    add_subdirectory(tvision) # Assuming Turbo Vision is in the 'tvision' directory.
+    add_subdirectory(tvision) # Supondo que o Turbo Vision esteja no diretório 'tvision'.
     target_link_libraries(my_application tvision)
     ```
 
-In either case, `<tvision/tv.h>` will be available in your application's include path during compilation, and your application will be linked against the necessary libraries (Ncurses, GPM...) automatically.
+Em ambos os casos, `<tvision/tv.h>` estará disponível no caminho de inclusão do seu aplicativo durante a compilação, e seu aplicativo será vinculado às bibliotecas necessárias (Ncurses, GPM...) automaticamente.
 
 <div id="features"></div>
 
-## Features
+## Recursos
 
-### Modern platforms (not Borland C++)
+### Plataformas modernas (não Borland C++)
 
-* UTF-8 support. You can try it out in the `tvedit` application.
-* 24-bit color support (up from the original 16 colors).
-* 'Open File' dialogs accepts both Unix and Windows-style file paths and can expand `~/` into `$HOME`.
-* Redirection of `stdin`/`stdout`/`stderr` does not interfere with terminal I/O.
-* Compatibility with 32-bit help files.
+* Suporte a UTF-8. Você pode experimentar no aplicativo `tvedit`.
+* Suporte a cores de 24 bits (acima das 16 cores originais).
+* As caixas de diálogo 'Abrir arquivo' aceitam caminhos de arquivo no estilo Unix e Windows e podem expandir `~/` para `$HOME`.
+* O redirecionamento de `stdin`/`stdout`/`stderr` não interfere na E/S do terminal.
+* Compatibilidade com arquivos de ajuda de 32 bits.
 
-There are a few environment variables that affect the behaviour of all Turbo Vision applications:
+Existem algumas variáveis ​​de ambiente que afetam o comportamento de todos os aplicativos Turbo Vision:
 
-* `TVISION_MAX_FPS`: maximum refresh rate, default `60`. This can help keep smoothness in terminal emulators with unefficient handling of box-drawing characters. Special values for this option are `0`, to disable refresh rate limiting, and `-1`, to actually draw to the terminal in every call to `THardwareInfo::screenWrite` (useful when debugging).
+* `TVISION_MAX_FPS`: taxa de atualização máxima, padrão `60`. Isso pode ajudar a manter a suavidade em emuladores de terminal com tratamento ineficiente de caracteres de desenho de caixa. Valores especiais para esta opção são `0`, para desabilitar a limitação da taxa de atualização, e `-1`, para realmente desenhar no terminal em cada chamada para `THardwareInfo::screenWrite` (útil ao depurar).
 
-* `TVISION_CODEPAGE`: the character set used internally by Turbo Vision to translate *extended ASCII* into Unicode. Valid values at the moment are `437` and `850`, with `437` being the default, although adding more takes very little effort.
+* `TVISION_CODEPAGE`: o conjunto de caracteres usado internamente pelo Turbo Vision para traduzir *ASCII estendido* para Unicode. Os valores válidos no momento são `437` e `850`, com `437` sendo o padrão, embora adicionar mais exija muito pouco esforço.
 
 ### Unix
 
-* Ncurses-based terminal support.
-* Extensive mouse and keyboard support:
-    * Support for X10 and SGR mouse encodings.
-    * Support for Xterm's [*modifyOtherKeys*](https://invisible-island.net/xterm/manpage/xterm.html#VT100-Widget-Resources:modifyOtherKeys).
-    * Support for Paul Evans' [*fixterms*](http://www.leonerd.org.uk/hacks/fixterms/) and Kitty's [keyboard protocol](https://sw.kovidgoyal.net/kitty/keyboard-protocol/).
-    * Support for Conpty's [`win32-input-mode`](https://github.com/microsoft/terminal/blob/37b0cfd32ba0aa54e0fe50bb158154d906472a89/doc/specs/%234999%20-%20Improved%20keyboard%20handling%20in%20Conpty.md) (available in WSL).
-    * Support for [far2l](https://github.com/elfmz/far2l)'s terminal extensions.
-    * Support for key modifiers (via `TIOCLINUX`) and mouse (via GPM) in the Linux console.
-* Custom signal handler that restores the terminal state before the program crashes.
-* When `stderr` is a tty, messages written to it are redirected to a buffer to prevent them from messing up the display and are eventually printed to the console when exiting or suspending the application.
-    * The buffer used for this purpose has a limited size, so writes to `stderr` will fail once the buffer is full. If you wish to preserve all of `stderr`, just redirect it into a file from the command line with `2>`.
+* Suporte a terminal baseado em Ncurses.
+* Suporte extensivo a mouse e teclado:
+* Suporte para codificações de mouse X10 e SGR.
+* Suporte para [*modifyOtherKeys*](https://invisible-island.net/xterm/manpage/xterm.html#VT100-Widget-Resources:modifyOtherKeys) do Xterm.
+* Suporte para [*fixterms*](http://www.leonerd.org.uk/hacks/fixterms/) de Paul Evans e [protocolo de teclado](https://sw.kovidgoyal.net/kitty/keyboard-protocol/) do Kitty.
+* Suporte para [`win32-input-mode`](https://github.com/microsoft/terminal/blob/37b0cfd32ba0aa54e0fe50bb158154d906472a89/doc/specs/%234999%20-%20Improved%20keyboard%20handling%20in%20Conpty.md) do Conpty (disponível no WSL).
+* Suporte para extensões de terminal do [far2l](https://github.com/elfmz/far2l).
+* Suporte para modificadores de tecla (via `TIOCLINUX`) e mouse (via GPM) no console Linux.
+* Manipulador de sinal personalizado que restaura o estado do terminal antes que o programa trave.
+* Quando `stderr` é um tty, as mensagens escritas nele são redirecionadas para um buffer para evitar que elas baguncem a exibição e são eventualmente impressas no console ao sair ou suspender o aplicativo.
+* O buffer usado para esse propósito tem um tamanho limitado, então as gravações em `stderr` falharão quando o buffer estiver cheio. Se você deseja preservar todo o `stderr`, apenas redirecione-o para um arquivo a partir da linha de comando com `2>`.
 
-The following environment variables are also taken into account:
+As seguintes variáveis ​​de ambiente também são levadas em conta:
 
-* `TERM`: Ncurses uses it to determine terminal capabilities. It is set automatically by the terminal emulator.
-* `COLORTERM`: when set to `truecolor` or `24bit`, Turbo Vision will assume the terminal emulator supports 24-bit color. It is set automatically by terminal emulators that support it.
-* `ESCDELAY`: the number of milliseconds to wait after receiving an ESC key press, default `10`. If another key is pressed during this delay, it will be interpreted as an Alt+Key combination. Using a larger value is useful when the terminal doesn't support the Alt key.
-* `TVISION_USE_STDIO`: when not empty, terminal I/O is performed through `stdin`/`stdout`, so that it can be redirected from the shell. By default, Turbo Vision performs terminal I/O through `/dev/tty`, allowing the user to redirect `stdin`, `stdout` and `stderr` for their needs, without affecting the application's stability.
+* `TERM`: Ncurses usa para determinar as capacidades do terminal. É definido automaticamente pelo emulador de terminal.
+* `COLORTERM`: quando definido como `truecolor` ou `24bit`, o Turbo Vision assumirá que o emulador de terminal suporta cores de 24 bits. É definido automaticamente pelos emuladores de terminal que o suportam.
+* `ESCDELAY`: o número de milissegundos a esperar após receber um pressionamento de tecla ESC, padrão `10`. Se outra tecla for pressionada durante esse atraso, será interpretado como uma combinação Alt+Tecla. Usar um valor maior é útil quando o terminal não suporta a tecla Alt.
+* `TVISION_USE_STDIO`: quando não está vazio, a E/S do terminal é realizada por meio de `stdin`/`stdout`, para que possa ser redirecionada do shell. Por padrão, o Turbo Vision executa E/S de terminal por meio de `/dev/tty`, permitindo que o usuário redirecione `stdin`, `stdout` e `stderr` conforme suas necessidades, sem afetar a estabilidade do aplicativo.
 
-    For example, the following will leave `out.txt` empty:
+	Por exemplo, o seguinte deixará `out.txt` vazio:
 
     ```sh
     tvdemo | tee out.txt
     ```
 
-    While the following will dump all the escape sequences and text printed by the application into `out.txt`:
+	Enquanto o seguinte despejará todas as sequências de escape e o texto impresso pelo aplicativo em `out.txt`:
 
     ```sh
     TVISION_USE_STDIO=1 tvdemo | tee out.txt
@@ -329,71 +329,71 @@ The following environment variables are also taken into account:
 
 ### Windows
 
-* Only compatible with the Win32 Console API. On terminal emulators that don't support this, Turbo Vision will automatically pop up a separate console window.
-* Applications fit the console window size instead of the buffer size (no scrollbars are visible) and the console buffer is restored when exiting or suspending Turbo Vision.
+* Compatível apenas com a API do console Win32. Em emuladores de terminal que não oferecem suporte a isso, o Turbo Vision abrirá automaticamente uma janela de console separada.
+* Os aplicativos se ajustam ao tamanho da janela do console em vez do tamanho do buffer (nenhuma barra de rolagem é visível) e o buffer do console é restaurado ao sair ou suspender o Turbo Vision.
 
-The following are not available when compiling with Borland C++:
+O seguinte não está disponível ao compilar com Borland C++:
 
-* The console's codepage is set to UTF-8 on startup and restored on exit.
-* Microsoft's C runtime functions are set automatically to UTF-8 mode, so you as a developer don't need to use the `wchar_t` variants.
-* If the console crashes, a new one is allocated automatically.
+* A página de código do console é definida como UTF-8 na inicialização e restaurada na saída.
+* As funções de tempo de execução C da Microsoft são definidas automaticamente para o modo UTF-8, então você, como desenvolvedor, não precisa usar as variantes `wchar_t`.
+* Se o console travar, um novo será alocado automaticamente.
 
-**Note:** Turbo Vision writes UTF-8 text directly to the Windows console. If the console is set in legacy mode and the bitmap font is being used, Unicode characters will not be displayed properly ([photo](https://user-images.githubusercontent.com/20713561/91917174-7a1f4600-ecbf-11ea-8c7a-2ec80d31d2ca.png)). To avoid this, Turbo Vision detects this situation and tries to change the console font to `Consolas` or `Lucida Console`.
+**Observação:** O Turbo Vision grava texto UTF-8 diretamente no console do Windows. Se o console estiver definido no modo legado e a fonte bitmap estiver sendo usada, os caracteres Unicode não serão exibidos corretamente ([foto](https://user-images.githubusercontent.com/20713561/91917174-7a1f4600-ecbf-11ea-8c7a-2ec80d31d2ca.png)). Para evitar isso, o Turbo Vision detecta essa situação e tenta alterar a fonte do console para `Consolas` ou `Lucida Console`.
 
-### All platforms
+### Todas as plataformas
 
-The following are new features not available in Borland's release of Turbo Vision or in previous open source ports (Sigala, SET):
+Os seguintes são novos recursos não disponíveis na versão Turbo Vision da Borland ou em ports de código aberto anteriores (Sigala, SET):
 
-* Middle mouse button and mouse wheel support.
-* Arbitrary screen size support (up to 32767 rows or columns) and graceful handling of screen resize events.
-* Windows can be resized from their bottom left corner.
-* Windows can be dragged from empty areas with the middle mouse button.
-* Improved usability of menus: they can be closed by clicking again on the parent menu item.
-* Improved usability of scrollbars: dragging them also scrolls the page. Clicking on an empty area of the scrollbar moves the thumb right under the cursor. They respond by default to mouse wheel events.
-* `TInputLine`s no longer scroll the text display on focus/unfocus, allowing relevant text to stay visible.
-* Support for LF line endings in `TFileViewer` (`tvdemo`) and `TEditor` (`tvedit`). `TEditor` preserves the line ending on file save but all newly created files use CRLF by default.
-* `TEditor`: context menu on right click.
-* `TEditor`: drag scroll with middle mouse button.
-* `TEditor`, `TInputLine`: delete whole words with `kbAltBack`, `kbCtrlBack` and `kbCtrlDel`.
-* `TEditor`: the Home key toggles between beginning of line and beginning of indented text.
-* `TEditor`: support for files bigger than 64 KiB on 32-bit or 64-bit builds.
-* `tvdemo`: event viewer applet useful for event debugging.
-* `tvdemo`: option to change the background pattern.
+* Suporte ao botão do meio do mouse e à roda do mouse.
+* Suporte a tamanho de tela arbitrário (até 32.767 linhas ou colunas) e tratamento elegante de eventos de redimensionamento de tela.
+* As janelas podem ser redimensionadas a partir do canto inferior esquerdo.
+* As janelas podem ser arrastadas de áreas vazias com o botão do meio do mouse.
+* Usabilidade aprimorada dos menus: eles podem ser fechados clicando novamente no item de menu pai.
+* Usabilidade aprimorada das barras de rolagem: arrastá-las também rola a página. Clicar em uma área vazia da barra de rolagem move o polegar para a direita abaixo do cursor. Eles respondem por padrão aos eventos da roda do mouse.
+* `TInputLine`s não rolam mais a exibição de texto em foco/desfoque, permitindo que o texto relevante permaneça visível.
+* Suporte para terminações de linha LF em `TFileViewer` (`tvdemo`) e `TEditor` (`tvedit`). `TEditor` preserva a terminação de linha ao salvar o arquivo, mas todos os arquivos recém-criados usam CRLF por padrão.
+* `TEditor`: menu de contexto no clique direito.
+* `TEditor`: arraste e role com o botão do meio do mouse.
+* `TEditor`, `TInputLine`: exclua palavras inteiras com `kbAltBack`, `kbCtrlBack` e `kbCtrlDel`.
+* `TEditor`: a tecla Home alterna entre o início da linha e o início do texto recuado.
+* `TEditor`: suporte para arquivos maiores que 64 KiB em compilações de 32 ou 64 bits.
+* `tvdemo`: applet visualizador de eventos útil para depuração de eventos.
+* `tvdemo`: opção para alterar o padrão de fundo.
 
 <div id="apichanges"></div>
 
-## API changes
+## Alterações na API
 
-* Screen writes are buffered and are usually sent to the terminal once for every iteration of the active event loop (see also `TVISION_MAX_FPS`). If you need to update the screen during a busy loop, you may use `TScreen::flushScreen()`.
-* `TDrawBuffer` is no longer a fixed-length array and its methods prevent past-the-end array accesses. Therefore, old code containing comparisons against `sizeof(TDrawBuffer)/sizeof(ushort)` is no longer valid; such checks should be removed.
-* `TApplication` now provides `dosShell()`, `cascade()` and `tile()`, and handles `cmDosShell`, `cmCascade` and `cmTile` by default. These functions can be customized by overriding `getTileRect()` and `writeShellMsg()`. This is the same behaviour as in the Pascal version.
-* Mouse wheel support: new mouse event `evMouseWheel`. The wheel direction is specified in the new field `event.mouse.wheel`, whose possible values are `mwUp`, `mwDown`, `mwLeft` or `mwRight`.
-* Middle mouse button support: new mouse button flag `mbMiddleButton`.
-* The `buttons` field in `evMouseUp` events is no longer empty. It now indicates which button was released.
-* Triple-click support: new mouse event flag `meTripleClick`.
-* `TRect` methods `move`, `grow`, `intersect` and `Union` now return `TRect&` instead of being `void` so that they can be chained.
-* `TOutlineViewer` now allows the root node to have siblings.
-* New function `ushort popupMenu(TPoint where, TMenuItem &aMenu, TGroup *receiver=0)` which spawns a `TMenuPopup` on the desktop. See `source/tvision/popupmnu.cpp`.
-* New virtual method `TMenuItem& TEditor::initContextMenu(TPoint p)` that determines the entries of the right-click context menu in `TEditor`.
-* `fexpand` can now take a second parameter `relativeTo`.
-* New class `TStringView`, inspired by `std::string_view`.
-    * Many functions which originally had null-terminated string parameters now receive `TStringView` instead. `TStringView` is compatible with `std::string_view`, `std::string` and `const char *` (even `nullptr`).
-* New class `TSpan<T>`, inspired by `std::span`.
-* New classes `TDrawSurface` and `TSurfaceView`, see `<tvision/surface.h>`.
-* The system integration subsystems (`THardwareInfo`, `TScreen`, `TEventQueue`...) are now initialized when constructing a `TApplication` for the first time, rather than before `main`. They are still destroyed on exit from `main`.
-* New method `TVMemMgr::reallocateDiscardable()` which can be used along `allocateDiscardable` and `freeDiscardable`.
-* New method `TView::textEvent()` which allows receiving text in an efficient manner, see [Clipboard interaction](#clipboard).
-* New class `TClipboard`, see [Clipboard interaction](#clipboard).
-* Unicode support, see [Unicode](#unicode).
-* True Color support, see [extended colors](#color).
-* New method `static void TEventQueue::waitForEvents(int timeoutMs)` which may block for up to `timeoutMs` milliseconds waiting for input events. A negative `timeoutMs` can be used to wait undefinitely. If it blocks, it has the side effect of flushing screen updates (via `TScreen::flushScreen()`). It is invoked by `TProgram::getEvent()` with `static int TProgram::eventTimeoutMs` (default `20`) as argument so that the event loop does not turn into a busy loop consuming 100% CPU.
-* New method `static void TEventQueue::wakeUp()` which causes the event loop to resume execution if it is blocked at `TEventQueue::waitForEvents()`. This method is thread-safe, since its purpose is to unblock the event loop from secondary threads.
-* New method `void TView::getEvent(TEvent &, int timeoutMs)` which allows waiting for an event with an user-provided timeout (instead of `TProgram::eventTimeoutMs`).
-* It is now possible to specify a maximum text width or maximum character count in `TInputLine`. This is done through a new parameter in `TInputLine`'s constructor, `ushort limitMode`, which controls how the second constructor parameter, `uint limit`, is to be treated. The `ilXXXX` constants define the possible values of `limitMode`:
-    * `ilMaxBytes` (the default): the text can be up to `limit` bytes long, including the null terminator.
-    * `ilMaxWidth`: the text can be up to `limit` columns wide.
-    * `ilMaxChars`: the text can contain up to `limit` non-combining characters or graphemes.
-* New functions which allow getting the names of Turbo Vision's constants at runtime (e.g. `evCommand`, `kbShiftIns`, etc.):
+* As gravações de tela são armazenadas em buffer e geralmente são enviadas ao terminal uma vez para cada iteração do loop de eventos ativo (veja também `TVISION_MAX_FPS`). Se você precisar atualizar a tela durante um loop ocupado, você pode usar `TScreen::flushScreen()`.
+* `TDrawBuffer` não é mais um array de comprimento fixo e seus métodos impedem acessos ao array após o fim. Portanto, o código antigo contendo comparações com `sizeof(TDrawBuffer)/sizeof(ushort)` não é mais válido; tais verificações devem ser removidas.
+* `TApplication` agora fornece `dosShell()`, `cascade()` e `tile()`, e manipula `cmDosShell`, `cmCascade` e `cmTile` por padrão. Essas funções podem ser personalizadas substituindo `getTileRect()` e `writeShellMsg()`. Este é o mesmo comportamento da versão Pascal.
+* Suporte à roda do mouse: novo evento de mouse `evMouseWheel`. A direção da roda é especificada no novo campo `event.mouse.wheel`, cujos valores possíveis são `mwUp`, `mwDown`, `mwLeft` ou `mwRight`.
+* Suporte ao botão do meio do mouse: novo sinalizador de botão do mouse `mbMiddleButton`.
+* O campo `buttons` em eventos `evMouseUp` não está mais vazio. Agora ele indica qual botão foi liberado.
+* Suporte a clique triplo: novo sinalizador de evento do mouse `meTripleClick`.
+* Os métodos `TRect` `move`, `grow`, `intersect` e `Union` agora retornam `TRect&` em vez de `void` para que possam ser encadeados.
+* `TOutlineViewer` agora permite que o nó raiz tenha irmãos.
+* Nova função `ushort popupMenu(TPoint where, TMenuItem &aMenu, TGroup *receiver=0)` que gera um `TMenuPopup` na área de trabalho. Veja `source/tvision/popupmnu.cpp`.
+* Novo método virtual `TMenuItem& TEditor::initContextMenu(TPoint p)` que determina as entradas do menu de contexto do botão direito em `TEditor`.
+* `fexpand` agora pode receber um segundo parâmetro `relativeTo`.
+* Nova classe `TStringView`, inspirada em `std::string_view`.
+* Muitas funções que originalmente tinham parâmetros de string terminados em nulo agora recebem `TStringView`. `TStringView` é compatível com `std::string_view`, `std::string` e `const char *` (até mesmo `nullptr`).
+* Nova classe `TSpan<T>`, inspirada em `std::span`.
+* Novas classes `TDrawSurface` e `TSurfaceView`, veja `<tvision/surface.h>`.
+* Os subsistemas de integração do sistema (`THardwareInfo`, `TScreen`, `TEventQueue`...) agora são inicializados ao construir um `TApplication` pela primeira vez, em vez de antes de `main`. Eles ainda são destruídos ao sair de `main`.
+* Novo método `TVMemMgr::reallocateDiscardable()` que pode ser usado junto com `allocateDiscardable` e `freeDiscardable`.
+* Novo método `TView::textEvent()` que permite receber texto de forma eficiente, veja [Interação da área de transferência](#clipboard).
+* Nova classe `TClipboard`, veja [Interação da área de transferência](#clipboard).
+* Suporte a Unicode, veja [Unicode](#unicode).
+* Suporte a True Color, veja [cores estendidas](#color).
+* Novo método `static void TEventQueue::waitForEvents(int timeoutMs)` que pode bloquear por até `timeoutMs` milissegundos esperando por eventos de entrada. Um `timeoutMs` negativo pode ser usado para esperar indefinidamente. Se bloquear, tem o efeito colateral de liberar atualizações de tela (via `TScreen::flushScreen()`). É invocado por `TProgram::getEvent()` com `static int TProgram::eventTimeoutMs` (padrão `20`) como argumento para que o loop de eventos não se transforme em um loop ocupado consumindo 100% da CPU.
+* Novo método `static void TEventQueue::wakeUp()` que faz com que o loop de eventos retome a execução se for bloqueado em `TEventQueue::waitForEvents()`. Este método é thread-safe, pois seu propósito é desbloquear o loop de eventos de threads secundárias.
+* Novo método `void TView::getEvent(TEvent &, int timeoutMs)` que permite esperar por um evento com um tempo limite fornecido pelo usuário (em vez de `TProgram::eventTimeoutMs`).
+* Agora é possível especificar uma largura máxima de texto ou contagem máxima de caracteres em `TInputLine`. Isso é feito por meio de um novo parâmetro no construtor de `TInputLine`, `ushort limitMode`, que controla como o segundo parâmetro do construtor, `uint limit`, deve ser tratado. As constantes `ilXXXX` definem os valores possíveis de `limitMode`:
+	* `ilMaxBytes` (o padrão): o texto pode ter até `limit` bytes de comprimento, incluindo o terminador nulo.
+	* `ilMaxWidth`: o texto pode ter até `limit` colunas de largura.
+	* `ilMaxChars`: o texto pode conter até `limit` caracteres não combináveis ​​ou grafemas.
+* Novas funções que permitem obter os nomes das constantes do Turbo Vision em tempo de execução (por exemplo, `evCommand`, `kbShiftIns`, etc.):
     ```c++
     void printKeyCode(ostream &, ushort keyCode);
     void printControlKeyState(ostream &, ushort controlKeyState);
@@ -402,7 +402,7 @@ The following are new features not available in Borland's release of Turbo Visio
     void printMouseWheelState(ostream &, ushort wheelState);
     void printMouseEventFlags(ostream &, ushort eventFlags);
     ```
-* New class `TKey` which can be used to define new key combinations (e.g. `Shift+Alt+Up`) by specifying a key code and a mask of key modifiers:
+* Nova classe `TKey` que pode ser usada para definir novas combinações de teclas (por exemplo, `Shift+Alt+Up`) especificando um código de tecla e uma máscara de modificadores de tecla:
     ```c++
     auto kbShiftAltUp = TKey(kbUp, kbShift | kbAltShift);
     assert(kbCtrlA == TKey('A', kbCtrlShift));
@@ -413,52 +413,52 @@ The following are new features not available in Borland's release of Turbo Visio
     if (event.keyDown == TKey(kbEnter, kbShift))
         doStuff();
     ```
-* New methods which allow using timed events:
+* Novos métodos que permitem usar eventos temporizados:
     ```c++
     TTimerId TView::setTimer(uint timeoutMs, int periodMs = -1);
     void TView::killTimer(TTimerId id);
     ```
-    `setTimer` starts a timer that will first time out in `timeoutMs` milliseconds and then every `periodMs` milliseconds.
+	`setTimer` inicia um timer que primeiro expirará em `timeoutMs` milissegundos e depois a cada `periodMs` milissegundos.
 
-    If `periodMs` is negative, the timer only times out a single time and is cleaned up automatically. Otherwise, it will keep timing out periodically until `killTimer` is invoked.
+	Se `periodMs` for negativo, o timer expirará apenas uma vez e será limpo automaticamente. Caso contrário, ele continuará expirando periodicamente até que `killTimer` seja invocado.
 
-    When a timer times out, an `evBroadcast` event with the command `cmTimerExpired` is emitted, and `message.infoPtr` is set to the `TTimerId` of the expired timer.
+	Quando um timer expira, um evento `evBroadcast` com o comando `cmTimerExpired` é emitido, e `message.infoPtr` é definido como o `TTimerId` do timer expirado.
 
-    Timeout events are generated in `TProgram::idle()`. Therefore, they are only processed when no keyboard or mouse events are available.
+	Eventos de tempo limite são gerados em `TProgram::idle()`. Portanto, eles são processados ​​apenas quando nenhum evento de teclado ou mouse estiver disponível.
 
-## Screenshots
+## Telas de alguns exemplos
 
-You will find some screenshots [here](https://github.com/magiblot/tvision/issues/7). Feel free to add your own!
+Você encontrará algumas capturas de tela [aqui](https://github.com/magiblot/tvision/issues/7). Sinta-se à vontade para adicionar as suas!
 
-## Contributing
+## Contribuindo
 
-If you know of any Turbo Vision applications whose source code has not been lost and that could benefit from this, let me know.
+Se você conhece algum aplicativo Turbo Vision cujo código-fonte não foi perdido e que poderia se beneficiar disso, me avise.
 
 <div id="applications"></div>
 
-## Applications using Turbo Vision
+## Aplicações que estão usando o Borland Turbo Vision
 
-If your application is based on this project and you'd like it to appear in the following list, just let me know.
+Se sua inscrição for baseada neste projeto e você quiser que ele apareça na lista a seguir, é só me avisar.
 
-* [Turbo](https://github.com/magiblot/turbo) by [magiblot](https://github.com/magiblot), a proof-of-concept text editor.
-* [tvterm](https://github.com/magiblot/tvterm) by [magiblot](https://github.com/magiblot), a proof-of-concept terminal emulator.
-* [TMBASIC](https://github.com/electroly/tmbasic) by [Brian Luft](https://github.com/electroly), a programming language for creating console applications.
+* [Turbo](https://github.com/magiblot/turbo) by [magiblot](https://github.com/magiblot), um editor de texto de prova de conceito.
+* [tvterm](https://github.com/magiblot/tvterm) by [magiblot](https://github.com/magiblot), um emulador de terminal de prova de conceito.
+* [TMBASIC](https://github.com/electroly/tmbasic) by [Brian Luft](https://github.com/electroly), uma linguagem de programação para criar aplicativos de console.
 
 <div id="unicode"></div>
 
-# Unicode support
+# Suporte a caracteres Unicode
 
-The Turbo Vision API has been extended to allow receiving Unicode input and displaying Unicode text. The supported encoding is UTF-8, for a number of reasons:
+A API do Turbo Vision foi estendida para permitir o recebimento de entrada Unicode e a exibição de texto Unicode. A codificação suportada é UTF-8, por uma série de razões:
 
-* It is compatible with already present data types (`char *`), so it does not require intrusive modifications to existing code.
-* It is the same encoding used for terminal I/O, so redundant conversions are avoided.
-* Conformance to the [UTF-8 Everywhere Manifesto](http://utf8everywhere.org/), which exposes many other advantages.
+* É compatível com tipos de dados já presentes (`char *`), portanto, não requer modificações intrusivas no código existente.
+* É a mesma codificação usada para E/S de terminal, portanto, conversões redundantes são evitadas.
+* Conformidade com o [Manifesto UTF-8 Everywhere](http://utf8everywhere.org/), que expõe muitas outras vantagens.
 
-Note that when built with Borland C++, Turbo Vision does not support Unicode. However, this does not affect the way Turbo Vision applications are written, since the API extensions are designed to allow for encoding-agnostic code.
+Observe que, quando construído com Borland C++, o Turbo Vision não suporta Unicode. No entanto, isso não afeta a maneira como os aplicativos do Turbo Vision são escritos, pois as extensões da API são projetadas para permitir código independente de codificação.
 
 ## Reading Unicode input
 
-The traditional way to get text from a key press event is as follows:
+A maneira tradicional de obter texto de um evento de pressionamento de tecla é a seguinte:
 
 ```c++
 // 'ev' is a TEvent, and 'ev.what' equals 'evKeyDown'.
@@ -474,17 +474,17 @@ switch (ev.keyDown.keyCode) {
 }
 ```
 
-Some of the existing Turbo Vision classes that deal with text input still depend on this methodology, which has not changed. Single-byte characters, when representable in the current codepage, continue to be available in `ev.keyDown.charScan.charCode`.
+Algumas das classes Turbo Vision existentes que lidam com entrada de texto ainda dependem dessa metodologia, que não mudou. Caracteres de byte único, quando representáveis ​​na página de código atual, continuam disponíveis em `ev.keyDown.charScan.charCode`.
 
-Unicode support consists in two new fields in `ev.keyDown` (which is a `struct KeyDownEvent`):
+O suporte Unicode consiste em dois novos campos em `ev.keyDown` (que é um `struct KeyDownEvent`):
 
-* `char text[4]`, which may contain whatever was read from the terminal: usually a UTF-8 sequence, but possibly any kind of raw data.
-* `uchar textLength`, which is the number of bytes of data available in `text`, from 0 to 4.
+* `char text[4]`, que pode conter o que foi lido do terminal: geralmente uma sequência UTF-8, mas possivelmente qualquer tipo de dado bruto.
+* `uchar textLength`, que é o número de bytes de dados disponíveis em `text`, de 0 a 4.
 
-Note that the `text` string is not null-terminated.
-You can get a `TStringView` out of a `KeyDownEvent` with the `getText()` method.
+Observe que a string `text` não é terminada em nulo.
+Você pode obter um `TStringView` de um `KeyDownEvent` com o método `getText()`.
 
-So a Unicode character can be retrieved from `TEvent` in the following way:
+Portanto, um caractere Unicode pode ser recuperado de `TEvent` da seguinte maneira:
 
 ```c++
 switch (ev.keyDown.keyCode) {
@@ -496,7 +496,7 @@ switch (ev.keyDown.keyCode) {
 }
 ```
 
-Let's see it from another perspective. If the user types `ñ`, a `TEvent` is generated with the following `keyDown` struct:
+Vamos ver de outra perspectiva. Se o usuário digitar `ñ`, um `TEvent` é gerado com a seguinte struct `keyDown`:
 
 ```c++
 KeyDownEvent {
@@ -512,7 +512,9 @@ KeyDownEvent {
     .textLength = 2
 }
 ```
-However, if they type `€` the following will happen:
+
+Entretanto, se eles digitarem `€` o seguinte acontecerá:
+
 ```c++
 KeyDownEvent {
     union {
@@ -527,7 +529,9 @@ KeyDownEvent {
     .textLength = 3
 }
 ```
-If a key shortcut is pressed instead, `text` is empty:
+
+Se um atalho de tecla for pressionado, `text` estará vazio:
+
 ```c++
 KeyDownEvent {
     union {
@@ -542,72 +546,75 @@ KeyDownEvent {
     .textLength = 0
 }
 ```
-So, in short: views designed without Unicode input in mind will continue to work exactly as they did before, and views which want to be Unicode-aware will have no issues in being so.
+Então, resumindo: as visualizações projetadas sem a entrada Unicode em mente continuarão a funcionar exatamente como antes, e as visualizações que desejam ser compatíveis com Unicode não terão problemas em fazê-lo.
 
-## Displaying Unicode text
+## Exibindo texto Unicode
 
-The original design of Turbo Vision uses 16 bits to represent a *screen cell*—8 bit for a character and 8 bit for [BIOS color attributes](https://en.wikipedia.org/wiki/BIOS_color_attributes).
+O design original do Turbo Vision usa 16 bits para representar uma *célula de tela* — 8 bits para um caractere e 8 bits para [atributos de cor do BIOS](https://en.wikipedia.org/wiki/BIOS_color_attributes).
 
-A new `TScreenCell` type is defined in `<tvision/scrncell.h>` which is capable of holding a limited number of UTF-8 codepoints in addition to extended attributes (bold, underline, italic...). However, you should not write text into a `TScreenCell` directly but make use of Unicode-aware API functions instead.
+Um novo tipo `TScreenCell` é definido em `<tvision/scrncell.h>` que é capaz de conter um número limitado de pontos de código UTF-8, além de atributos estendidos (negrito, sublinhado, itálico...). No entanto, você não deve escrever texto em um `TScreenCell` diretamente, mas usar funções de API compatíveis com Unicode.
 
-### Text display rules
+### Regras de exibição de texto
 
-A character provided as argument to any of the Turbo Vision API functions that deal with displaying text is interpreted as follows:
+Um caractere fornecido como argumento para qualquer uma das funções da API do Turbo Vision que lidam com a exibição de texto é interpretado da seguinte forma:
 
-* Non-printable characters in the range `0x00` to `0xFF` are interpreted as characters in the active codepage. For instance, `0x7F` is displayed as `⌂` and `0xF0` as `≡` if using CP437. As an exception, `0x00` is always displayed as a regular space. These characters are all one column wide.
-* Character sequences which are not valid UTF-8 are interpreted as sequences of characters in the current codepage, as in the case above.
-* Valid UTF-8 sequences with a display width other than one are taken care of in a special way, see below.
+* Caracteres não imprimíveis no intervalo `0x00` a `0xFF` são interpretados como caracteres na página de código ativa. Por exemplo, `0x7F` é exibido como `⌂` e `0xF0` como `≡` se estiver usando CP437. Como exceção, `0x00` é sempre exibido como um espaço regular. Esses caracteres têm todos uma coluna de largura.
+* Sequências de caracteres que não são UTF-8 válidas são interpretadas como sequências de caracteres na página de código atual, como no caso acima.
+* Sequências UTF-8 válidas com uma largura de exibição diferente de um são tratadas de uma maneira especial, veja abaixo.
 
-For example, the string `"╔[\xFE]╗"` may be displayed as `╔[■]╗`. This means that box-drawing characters can be mixed with UTF-8 in general, which is useful for backward compatibility. If you rely on this behaviour, though, you may get unexpected results: for instance, `"\xC4\xBF"` is a valid UTF-8 sequence and is displayed as `Ŀ` instead of `─┐`.
+Por exemplo, a string `"╔[\xFE]╗"` pode ser exibida como `╔[■]╗`. Isso significa que caracteres de desenho de caixa podem ser misturados com UTF-8 em geral, o que é útil para compatibilidade com versões anteriores. Se você confiar nesse comportamento, no entanto, poderá obter resultados inesperados: por exemplo, `"\xC4\xBF"` é uma sequência UTF-8 válida e é exibida como `Ŀ` em vez de `─┐`.
 
-One of the issues of Unicode support is the existence of [double-width](https://convertcase.net/vaporwave-wide-text-generator/) characters and [combining](https://en.wikipedia.org/wiki/Combining_Diacritical_Marks) characters. This conflicts with Turbo Vision's original assumption that the screen is a grid of cells occupied by a single character each. Nevertheless, these cases are handled in the following way:
+Um dos problemas do suporte Unicode é a existência de caracteres [double-width](https://convertcase.net/vaporwave-wide-text-generator/) e caracteres [combining](https://en.wikipedia.org/wiki/Combining_Diacritical_Marks). Isso entra em conflito com a suposição original da Turbo Vision de que a tela é uma grade de células ocupadas por um único caractere cada. No entanto, esses casos são tratados da seguinte maneira:
 
-* Double-width characters can be drawn anywhere on the screen and nothing bad happens if they overlap partially with other characters.
-* Zero-width characters overlay the previous character. For example, the sequence `में` consists of the single-width character `म` and the combining characters `े` and `ं`. In this case, three Unicode codepoints are fit into the same cell.
+* Caracteres de largura dupla podem ser desenhados em qualquer lugar da tela e nada de ruim acontece se eles se sobrepõem parcialmente a outros caracteres.
+* Caracteres de largura zero sobrepõem o caractere anterior. Por exemplo, a sequência `में` consiste no caractere de largura única `म` e nos caracteres de combinação `े` e `ं`. Neste caso, três pontos de código Unicode são ajustados na mesma célula.
 
-    The `ZERO WIDTH JOINER` (`U+200D`) is always omitted, as it complicates things too much. For example, it can turn a string like `"👩👦"` (4 columns wide) into `"👩‍👦"` (2 columns wide). Not all terminal emulators respect the ZWJ, so, in order to produce predictable results, Turbo Vision will print both `"👩👦"` and `"👩‍👦"` as `👩👦`.
-* No notable graphical glitches will occur as long as your terminal emulator respects character widths as measured by `wcwidth`.
+O `ZERO WIDTH JOINER` (`U+200D`) é sempre omitido, pois complica muito as coisas. Por exemplo, ele pode transformar uma string como `"👩👦"` (4 colunas de largura) em `"👩‍👦"` (2 colunas de largura). Nem todos os emuladores de terminal respeitam o ZWJ, então, para produzir resultados previsíveis, o Turbo Vision imprimirá `"👩👦"` e `"👩‍👦"` como `👩👦`.
+	* Nenhuma falha gráfica notável ocorrerá, desde que seu emulador de terminal respeite as larguras dos caracteres medidas por `wcwidth`.
 
-Here is an example of such characters in the [Turbo](https://github.com/magiblot/turbo) text editor:
-![Wide character display](https://user-images.githubusercontent.com/20713561/103179253-51344980-488a-11eb-9a29-79b9acb1b4b9.png)
+Aqui está um exemplo desses caracteres no editor de texto [Turbo](https://github.com/magiblot/turbo):
+![Exibição ampla de caracteres](https://user-images.githubusercontent.com/20713561/103179253-51344980-488a-11eb-9a29-79b9acb1b4b9.png)
 
-### Unicode-aware API functions
+### Funções de API compatíveis com Unicode
 
-The usual way of writing to the screen is by using `TDrawBuffer`. A few methods have been added and others have changed their meaning:
+A maneira usual de escrever na tela é usando `TDrawBuffer`. Alguns métodos foram adicionados e outros mudaram seus significados:
 
 ```c++
 void TDrawBuffer::moveChar(ushort indent, char c, TColorAttr attr, ushort count);
 void TDrawBuffer::putChar(ushort indent, char c);
 ```
-`c` is always interpreted as a character in the active codepage.
+
+`c` é sempre interpretado como um caractere na página de código ativa.
 
 ```c++
 ushort TDrawBuffer::moveStr(ushort indent, TStringView str, TColorAttr attr);
 ushort TDrawBuffer::moveCStr(ushort indent, TStringView str, TAttrPair attrs);
 ```
-`str` is interpreted according to the rules exposed previously.
+
+`str` é interpretado de acordo com as regras expostas anteriormente.
 
 ```c++
 ushort TDrawBuffer::moveStr(ushort indent, TStringView str, TColorAttr attr, ushort maxWidth, ushort strOffset = 0); // New
 ushort TDrawBuffer::moveCStr(ushort indent, TStringView str, TColorAttr attr, ushort maxWidth, ushort strOffset = 0); // New
 ```
-`str` is interpreted according to the rules exposed previously, but:
-* `maxWidth` specifies the maximum amount of text that should be copied from `str`, measured in text width (not in bytes).
-* `strOffset` specifies the initial position in `str` where to copy from, measured in text width (not in bytes). This is useful for horizontal scrolling. If `strOffset` points to the middle of a double-width character, a space will be copied instead of the right half of the double-width character, since it is not possible to do such a thing.
 
-The return values are the number of cells in the buffer that were actually filled with text (which is the same as the width of the copied text).
+`str` é interpretado de acordo com as regras expostas anteriormente, mas:
+* `maxWidth` especifica a quantidade máxima de texto que deve ser copiada de `str`, medida em largura de texto (não em bytes).
+* `strOffset` especifica a posição inicial em `str` de onde copiar, medida em largura de texto (não em bytes). Isso é útil para rolagem horizontal. Se `strOffset` apontar para o meio de um caractere de largura dupla, um espaço será copiado em vez da metade direita do caractere de largura dupla, já que não é possível fazer tal coisa.
+
+Os valores de retorno são o número de células no buffer que foram realmente preenchidas com texto (que é o mesmo que a largura do texto copiado).
 
 ```c++
 void TDrawBuffer::moveBuf(ushort indent, const void *source, TColorAttr attr, ushort count);
 ```
-The name of this function is misleading. Even in its original implementation, `source` is treated as a string. So it is equivalent to `moveStr(indent, TStringView((const char*) source, count), attr)`.
+O nome desta função é enganoso. Mesmo em sua implementação original, `source` é tratado como uma string. Então é equivalente a `moveStr(indent, TStringView((const char*) source, count), attr)`.
 
-There are other useful Unicode-aware functions:
+Existem outras funções úteis que reconhecem Unicode:
 
 ```c++
 int cstrlen(TStringView s);
 ```
-Returns the displayed length of `s` according to the aforementioned rules, discarding `~` characters.
+Retorna o comprimento exibido de `s` de acordo com as regras mencionadas acima, descartando caracteres `~`.
 
 ```c++
 int strwidth(TStringView s); // New
