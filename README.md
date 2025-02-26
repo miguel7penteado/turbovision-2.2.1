@@ -594,8 +594,8 @@ ushort TDrawBuffer::moveCStr(ushort indent, TStringView str, TAttrPair attrs);
 `str` é interpretado de acordo com as regras expostas anteriormente.
 
 ```c++
-ushort TDrawBuffer::moveStr(ushort indent, TStringView str, TColorAttr attr, ushort maxWidth, ushort strOffset = 0); // New
-ushort TDrawBuffer::moveCStr(ushort indent, TStringView str, TColorAttr attr, ushort maxWidth, ushort strOffset = 0); // New
+ushort TDrawBuffer::moveStr(ushort indent, TStringView str, TColorAttr attr, ushort maxWidth, ushort strOffset = 0); // Novidade
+ushort TDrawBuffer::moveCStr(ushort indent, TStringView str, TColorAttr attr, ushort maxWidth, ushort strOffset = 0); // Novidade
 ```
 
 `str` é interpretado de acordo com as regras expostas anteriormente, mas:
@@ -617,13 +617,13 @@ int cstrlen(TStringView s);
 Retorna o comprimento exibido de `s` de acordo com as regras mencionadas acima, descartando caracteres `~`.
 
 ```c++
-int strwidth(TStringView s); // New
+int strwidth(TStringView s); // Novidade
 ```
-Returns the displayed length of `s`.
+Retorna o comprimento exibido de `s`.
 
-On Borland C++, these methods assume a single-byte encoding and all characters being one column wide. This makes it possible to write encoding-agnostic `draw()` and `handleEvent()` methods that work on both platforms without a single `#ifdef`.
+No Borland C++, esses métodos assumem uma codificação de byte único e todos os caracteres tendo uma coluna de largura. Isso torna possível escrever métodos `draw()` e `handleEvent()` agnósticos de codificação que funcionam em ambas as plataformas sem um único `#ifdef`.
 
-The functions above are implemented using the functions from the `TText` namespace, another API extension. You will have to use them directly if you want to fill `TScreenCell` objects with text manually. To give an example, below are some of the `TText` functions. You can find all of them with complete descriptions in `<tvision/ttext.h>`.
+As funções acima são implementadas usando as funções do namespace `TText`, outra extensão de API. Você terá que usá-las diretamente se quiser preencher objetos `TScreenCell` com texto manualmente. Para dar um exemplo, abaixo estão algumas das funções `TText`. Você pode encontrar todas elas com descrições completas em `<tvision/ttext.h>`.
 
 ```c++
 size_t TText::next(TStringView text);
@@ -633,7 +633,7 @@ size_t TText::drawStr(TSpan<TScreenCell> cells, size_t indent, TStringView text,
 bool TText::drawOne(TSpan<TScreenCell> cells, size_t &i, TStringView text, size_t &j);
 ```
 
-For drawing `TScreenCell` buffers into a view, the following methods are available:
+Para desenhar buffers `TScreenCell` em uma visualização, os seguintes métodos estão disponíveis:
 
 ```c++
 void TView::writeBuf(short x, short y, short w, short h, const TScreenCell *b); // New
@@ -642,7 +642,7 @@ void TView::writeLine(short x, short y, short w, short h, const TScreenCell *b);
 
 ### Example: Unicode text in menus and status bars
 
-It's as simple as it can be. Let's modify `hello.cpp` as follows:
+É tão simples quanto pode ser. Vamos modificar `hello.cpp` como segue:
 
 ```c++
 TMenuBar *THelloApp::initMenuBar( TRect r )
@@ -668,13 +668,14 @@ TStatusLine *THelloApp::initStatusLine( TRect r )
             );
 }
 ```
-Here is what it looks like:
+
+Veja como é:
 
 ![Unicode Hello](https://user-images.githubusercontent.com/20713561/103179255-5396a380-488a-11eb-88ad-0192adbe233e.png)
 
-### Example: writing Unicode-aware `draw()` methods
+### Exemplo: escrevendo métodos `draw()` compatíveis com Unicode
 
-The following is an excerpt from an old implementation of `TFileViewer::draw()` (part of the `tvdemo` application), which does not draw Unicode text properly:
+O seguinte é um trecho de uma implementação antiga de `TFileViewer::draw()` (parte do aplicativo `tvdemo`), que não desenha texto Unicode corretamente:
 
 ```c++
 if (delta.y + i < fileLines->getCount()) {
@@ -688,12 +689,12 @@ if (delta.y + i < fileLines->getCount()) {
 }
 writeBuf( 0, i, size.x, 1, b );
 ```
-All it does is move part of a string in `fileLines` into `b`, which is a `TDrawBuffer`. `delta` is a `TPoint` representing the scroll offset in the text view, and `i` is the index of the visible line being processed. `c` is the text color. A few issues are present:
+Tudo o que ele faz é mover parte de uma string em `fileLines` para `b`, que é um `TDrawBuffer`. `delta` é um `TPoint` que representa o deslocamento de rolagem na visualização de texto, e `i` é o índice da linha visível sendo processada. `c` é a cor do texto. Alguns problemas estão presentes:
 
-* `TDrawBuffer::moveStr(ushort, const char *, TColorAttr)` takes a null-terminated string. In order to pass a substring of the current line, a copy is made into the array `s`, at the risk of a [buffer overrun](https://github.com/magiblot/tvision/commit/8aa2bf4af4474b85e86e340b08d7c56081b68986). The case where the line does not fit into `s` is not handled, so at most `maxLineLenght` characters will be copied. What's more, a multibyte character near position `maxLineLength` could be copied incompletely and be displayed as garbage.
-* `delta.x` is the first visible column. With multibyte-encoded text, it is no longer true that such column begins at position `delta.x` in the string.
+* `TDrawBuffer::moveStr(ushort, const char *, TColorAttr)` recebe uma string terminada em nulo. Para passar uma substring da linha atual, uma cópia é feita no array `s`, correndo o risco de um [buffer overrun](https://github.com/magiblot/tvision/commit/8aa2bf4af4474b85e86e340b08d7c56081b68986). O caso em que a linha não se encaixa em `s` não é tratado, então no máximo caracteres `maxLineLenght` serão copiados. Além disso, um caractere multibyte próximo à posição `maxLineLength` pode ser copiado de forma incompleta e exibido como lixo.
+* `delta.x` é a primeira coluna visível. Com texto codificado em multibyte, não é mais verdade que tal coluna começa na posição `delta.x` na string.
 
-Below is a corrected version of the code above that handles Unicode properly:
+Abaixo está uma versão corrigida do código acima que manipula Unicode corretamente:
 
 ```c++
 if (delta.y + i < fileLines->getCount()) {
@@ -703,18 +704,18 @@ if (delta.y + i < fileLines->getCount()) {
 }
 writeBuf( 0, i, size.x, 1, b );
 ```
-The overload of `moveStr` used here is `TDrawBuffer::moveStr(ushort indent, TStringView str, TColorAttr attr, ushort width, ushort begin)`. This function not only provides Unicode support, but also helps us write cleaner code and overcome some of the limitations previously present:
+A sobrecarga de `moveStr` usada aqui é `TDrawBuffer::moveStr(ushort indent, TStringView str, TColorAttr attr, ushort width, ushort begin)`. Esta função não só fornece suporte a Unicode, mas também nos ajuda a escrever código mais limpo e superar algumas das limitações presentes anteriormente:
 
-* The intermediary copy is avoided, so the displayed text is not limited to `maxLineLength` bytes.
-* `moveStr` takes care of printing the string starting at column `delta.x`. We do not even need to worry about how many bytes correspond to `delta.x` columns.
-* Similarly, `moveStr` is instructed to copy at most `size.x` columns of text without us having to care about how many bytes that is nor dealing with edge cases. The code is written in an encoding-agnostic way and will work whether multibyte characters are being considered or not.
-* In case you hadn't realized yet, the intermediary copy in the previous version was completely unnecessary. It would have been necessary only if we had needed to trim the end of the line, but that was not the case: text occupies all of the view's width, and `TView::writeBuf` already takes care of not writing beyond it. Yet it is interesting to see how an unnecessary step not only was limiting functionality but also was prone to bugs.
+* A cópia intermediária é evitada, então o texto exibido não é limitado a bytes `maxLineLength`.
+* `moveStr` cuida de imprimir a string começando na coluna `delta.x`. Nós nem precisamos nos preocupar com quantos bytes correspondem às colunas `delta.x`.
+* Similarmente, `moveStr` é instruído a copiar no máximo colunas `size.x` de texto sem que tenhamos que nos preocupar com quantos bytes são ou lidar com casos extremos. O código é escrito de uma forma independente de codificação e funcionará se caracteres multibyte estiverem sendo considerados ou não.
+* Caso você ainda não tenha percebido, a cópia intermediária na versão anterior era completamente desnecessária. Teria sido necessária apenas se tivéssemos precisado cortar o final da linha, mas esse não foi o caso: o texto ocupa toda a largura da visualização, e `TView::writeBuf` já cuida de não escrever além dela. Ainda assim, é interessante ver como uma etapa desnecessária não apenas estava limitando a funcionalidade, mas também estava propensa a bugs.
 
-## Unicode support across standard views
+## Suporte Unicode em visualizações padrão
 
-Support for creating Unicode-aware views is in place, and most views in the original Turbo Vision library have been adapted to handle Unicode.
+O suporte para criar visualizações compatíveis com Unicode está em vigor, e a maioria das visualizações na biblioteca Turbo Vision original foi adaptada para lidar com Unicode.
 
-The following views can display Unicode text properly. Some of them also do horizontal scrolling or word wrapping; all of that should work fine.
+As visualizações a seguir podem exibir texto Unicode corretamente. Algumas delas também fazem rolagem horizontal ou quebra de linha; tudo isso deve funcionar bem.
 
 - [x] `TStaticText` ([`7b15d45d`](https://github.com/magiblot/tvision/commit/7b15d45da231f75f2677454021c2e34ad1149ca8)).
 - [x] `TFrame` ([`81066ee5`](https://github.com/magiblot/tvision/commit/81066ee5c05496612dfcd9cf75df5702cbfb9679)).
@@ -725,91 +726,94 @@ The following views can display Unicode text properly. Some of them also do hori
 - [x] `TMenuBox` ([`81066ee5`](https://github.com/magiblot/tvision/commit/81066ee5c05496612dfcd9cf75df5702cbfb9679)).
 - [x] `TTerminal` ([`ee821b69`](https://github.com/magiblot/tvision/commit/ee821b69c5dd81c565fe1add1ac6f0a2f8a96a01)).
 - [x] `TOutlineViewer` ([`6cc8cd38`](https://github.com/magiblot/tvision/commit/6cc8cd38da5841201544d6ba103f9662d7675213)).
-- [x] `TFileViewer` (from the `tvdemo` application) ([`068bbf7a`](https://github.com/magiblot/tvision/commit/068bbf7a0a13482bda91f9f3411ec614f9a1e6ff)).
-- [x] `TFilePane` (from the `tvdir` application) ([`9bcd897c`](https://github.com/magiblot/tvision/commit/9bcd897cb7cf010ef34d0281d42e9ea58345ce53)).
+- [x] `TFileViewer` (da aplicação `tvdemo` ) ([`068bbf7a`](https://github.com/magiblot/tvision/commit/068bbf7a0a13482bda91f9f3411ec614f9a1e6ff)).
+- [x] `TFilePane` (da aplicação `tvdir`) ([`9bcd897c`](https://github.com/magiblot/tvision/commit/9bcd897cb7cf010ef34d0281d42e9ea58345ce53)).
 
-The following views can, in addition, process Unicode text or user input:
+As seguintes visualizações podem, além disso, processar texto Unicode ou entrada do usuário:
 
 - [x] `TInputLine` ([`81066ee5`](https://github.com/magiblot/tvision/commit/81066ee5c05496612dfcd9cf75df5702cbfb9679), [`cb489d42`](https://github.com/magiblot/tvision/commit/cb489d42d522f7515c870942bcaa8f0f3dea3f35)).
-- [x] `TEditor` ([`702114dc`](https://github.com/magiblot/tvision/commit/702114dc03a13ebce2b52504eb122c97f9892de9)). Instances are in UTF-8 mode by default. You may switch back to single-byte mode by pressing `Ctrl+P`. This only changes how the document is displayed and the encoding of user input; it does not alter the document. This class is used in the `tvedit` application; you may test it there.
+- [x] `TEditor` ([`702114dc`](https://github.com/magiblot/tvision/commit/702114dc03a13ebce2b52504eb122c97f9892de9)). As instâncias estão no modo UTF-8 por padrão. Você pode voltar para o modo de byte único pressionando `Ctrl+P`. Isso apenas altera como o documento é exibido e a codificação da entrada do usuário; não altera o documento. Esta classe é usada no aplicativo `tvedit`; você pode testá-la lá.
 
-Views not in this list may not have needed any corrections or I simply forgot to fix them. Please submit an issue if you notice anything not working as expected.
+Visualizações que não estão nesta lista podem não ter precisado de nenhuma correção ou eu simplesmente esqueci de corrigi-las. Envie um problema se notar que algo não está funcionando como esperado.
 
-Use cases where Unicode is not supported (not an exhaustive list):
+Casos de uso em que Unicode não é suportado (não é uma lista exaustiva):
 
-- [ ] Highlighted key shortcuts, in general (e.g. `TMenuBox`, `TStatusLine`, `TButton`...).
+
+- [ ] Atalhos de teclado destacados, em geral (por exemplo, `TMenuBox`, `TStatusLine`, `TButton`...).
 
 <div id="clipboard"></div>
 
-# Clipboard interaction
+# Interação com a área de transferência
 
-Originally, Turbo Vision offered no integration with the system clipboard, since there was no such thing on MS-DOS.
+Originalmente, o Turbo Vision não oferecia integração com a área de transferência do sistema, já que não havia tal coisa no MS-DOS.
 
-It did offer the possibility of using an instance of `TEditor` as an internal clipboard, via the `TEditor::clipboard` static member. However, `TEditor` was the only class able to interact with this clipboard. It was not possible to use it with `TInputLine`, for example.
+Ele oferecia a possibilidade de usar uma instância do `TEditor` como uma área de transferência interna, por meio do membro estático `TEditor::clipboard`. No entanto, `TEditor` era a única classe capaz de interagir com esta área de transferência. Não era possível usá-lo com `TInputLine`, por exemplo.
 
-Turbo Vision applications are now most likely to be ran in a graphical environment through a terminal emulator. In this context, it would be desirable to interact with the system clipboard in the same way as a regular GUI application would do.
+Os aplicativos do Turbo Vision agora são mais propensos a serem executados em um ambiente gráfico por meio de um emulador de terminal. Nesse contexto, seria desejável interagir com a área de transferência do sistema da mesma forma que um aplicativo GUI regular faria.
 
-To deal with this, a new class `TClipboard` has been added which allows accessing the system clipboard. If the system clipboard is not accessible, it will instead use an internal clipboard.
+Para lidar com isso, uma nova classe `TClipboard` foi adicionada, que permite acessar a área de transferência do sistema. Se a área de transferência do sistema não estiver acessível, ela usará uma área de transferência interna.
 
-## Enabling clipboard support
+## Habilitando suporte à área de transferência
 
-On Windows (including WSL) and macOS, clipboard integration is supported out-of-the-box.
+No Windows (incluindo WSL) e macOS, a integração da área de transferência é suportada imediatamente.
 
-On Unix systems other than macOS, it is necessary to install some external dependencies. See [runtime requirements](#build-linux-runtime).
+Em sistemas Unix diferentes do macOS, é necessário instalar algumas dependências externas. Veja [requisitos de tempo de execução](#build-linux-runtime).
 
-For applications running remotely (e.g. through SSH), clipboard integration is supported in the following situations:
+Para aplicativos em execução remotamente (por exemplo, por meio de SSH), a integração da área de transferência é suportada nas seguintes situações:
 
-* When X11 forwarding over SSH is enabled (`ssh -X`).
-* When your terminal emulator supports far2l's terminal extensions ([far2l](https://github.com/elfmz/far2l), [putty4far2l](https://github.com/ivanshatsky/putty4far2l)).
-* When your terminal emulator supports OSC 52 escape codes:
-    * [alacritty](https://github.com/alacritty/alacritty), [kitty](https://github.com/kovidgoyal/kitty), [foot](https://codeberg.org/dnkl/foot).
-    * [xterm](https://invisible-island.net/xterm/), if the `allowWindowOps` option is enabled.
-    * A few other terminals only support the Copy action.
+* Quando o encaminhamento X11 por SSH está habilitado (`ssh -X`).
+* Quando seu emulador de terminal suporta extensões de terminal do far2l ([far2l](https://github.com/elfmz/far2l), [putty4far2l](https://github.com/ivanshatsky/putty4far2l)).
+* Quando seu emulador de terminal suporta códigos de escape OSC 52:
+	* [alacritty](https://github.com/alacritty/alacritty), [kitty](https://github.com/kovidgoyal/kitty), [foot](https://codeberg.org/dnkl/foot).
+	* [xterm](https://invisible-island.net/xterm/), se a opção `allowWindowOps` estiver habilitada.
+	* Alguns outros terminais suportam apenas a ação Copiar.
 
-Additionally, it is always possible to paste text using your terminal emulator's own Paste command (usually `Ctrl+Shift+V` or `Cmd+V`).
+Além disso, é sempre possível colar texto usando o comando Colar do seu emulador de terminal (geralmente `Ctrl+Shift+V` ou `Cmd+V`).
 
-## API usage
+## Uso da API
 
-To use the `TClipboard` class, define the macro `Uses_TClipboard` before including `<tvision/tv.h>`.
+Para usar a classe `TClipboard`, defina a macro `Uses_TClipboard` antes de incluir `<tvision/tv.h>`.
 
-### Writing to the clipboard
+### Escrevendo para a área de transferência
 
 ```c++
 static void TClipboard::setText(TStringView text);
 ```
 
-Sets the contents of the system clipboard to `text`. If the system clipboard is not accessible, an internal clipboard is used instead.
+Define o conteúdo da área de transferência do sistema para `text`. Se a área de transferência do sistema não estiver acessível, uma área de transferência interna será usada em vez disso.
 
-### Reading the clipboard
+### Lendo a área de transferência
 
 ```c++
 static void TClipboard::requestText();
 ```
 
-Requests the contents of the system clipboard asynchronously, which will be later received in the form of regular `evKeyDown` events. If the system clipboard is not accessible, an internal clipboard is used instead.
+Solicita o conteúdo da área de transferência do sistema de forma assíncrona, que será posteriormente recebido na forma de eventos `evKeyDown` regulares. Se a área de transferência do sistema não estiver acessível, uma área de transferência interna será usada em vez disso.
 
-### Processing Paste events
+### Processando eventos de colagem
 
-A Turbo Vision application may receive a Paste event for two different reasons:
+Um aplicativo Turbo Vision pode receber um evento Paste por dois motivos diferentes:
 
-* Because `TClipboard::requestText()` was invoked.
-* Because the user pasted text through the terminal.
+* Porque `TClipboard::requestText()` foi invocado.
+* Porque o usuário colou texto pelo terminal.
 
-In both cases the application will receive the clipboard contents in the form of regular `evKeyDown` events. These events will have a `kbPaste` flag in `keyDown.controlKeyState` so that they can be distinguished from regular key presses.
 
-Therefore, if your view can handle user input it will also handle Paste events by default. However, if the user pastes 5000 characters, the application will behave as if the user pressed the keyboard 5000 times. This involves drawing views, completing the event loop, updating the screen..., which is far from optimal if your view is a text editing component, for example.
+Em ambos os casos, o aplicativo receberá o conteúdo da área de transferência na forma de eventos `evKeyDown` regulares. Esses eventos terão um sinalizador `kbPaste` em `keyDown.controlKeyState` para que possam ser distinguidos de pressionamentos de tecla regulares.
 
-For the purpose of dealing with this situation, another function has been added:
+Portanto, se sua visualização puder manipular a entrada do usuário, ela também manipulará eventos Paste por padrão. No entanto, se o usuário colar 5000 caracteres, o aplicativo se comportará como se o usuário tivesse pressionado o teclado 5000 vezes. Isso envolve desenhar visualizações, concluir o loop de eventos, atualizar a tela..., o que está longe de ser o ideal se sua visualização for um componente de edição de texto, por exemplo.
+
+Para lidar com essa situação, outra função foi adicionada:
+
 
 ```c++
 bool TView::textEvent(TEvent &event, TSpan<char> dest, size_t &length);
 ```
 
-`textEvent()` attempts to read text from consecutive `evKeyDown` events and stores it in a user-provided buffer `dest`. It returns `false` when no more events are available or if a non-text event is found, in which case this event is saved with `putEvent()` so that it can be processed in the next iteration of the event loop. Finally, it calls `clearEvent(event)`.
+`textEvent()` tenta ler texto de eventos `evKeyDown` consecutivos e o armazena em um buffer `dest` fornecido pelo usuário. Ele retorna `false` quando não há mais eventos disponíveis ou se um evento não textual é encontrado, em cujo caso esse evento é salvo com `putEvent()` para que possa ser processado na próxima iteração do loop de eventos. Finalmente, ele chama `clearEvent(event)`.
 
-The exact number of bytes read is stored in the output parameter `length`, which will never be larger than `dest.size()`.
+O número exato de bytes lidos é armazenado no parâmetro de saída `length`, que nunca será maior que `dest.size()`.
 
-Here is an example on how to use it:
+Aqui está um exemplo de como usá-lo:
 
 ```c++
 // 'ev' is a TEvent, and 'ev.what' equals 'evKeyDown'.
@@ -825,9 +829,9 @@ if (ev.keyDown.controlKeyState & kbPaste) {
 }
 ```
 
-### Enabling application-wide clipboard usage
+### Habilitando o uso da área de transferência em todo o aplicativo
 
-The standard views `TEditor` and `TInputLine` react to the `cmCut`, `cmCopy` and `cmPaste` commands. However, your application first has to be set up to use these commands. For example:
+As visualizações padrão `TEditor` e `TInputLine` reagem aos comandos `cmCut`, `cmCopy` e `cmPaste`. No entanto, seu aplicativo primeiro precisa ser configurado para usar esses comandos. Por exemplo:
 
 ```c++
 TStatusLine *TMyApplication::initStatusLine( TRect r )
@@ -844,24 +848,24 @@ TStatusLine *TMyApplication::initStatusLine( TRect r )
 }
 ```
 
-`TEditor` and `TInputLine` automatically enable and disable these commands. For example, if a `TEditor` or `TInputLine` is focused, the `cmPaste` command will be enabled. If there is selected text, the `cmCut` and `cmCopy` commands will also be enabled. If no `TEditor` or `TInputLine`s are focused, then these commands will be disabled.
+`TEditor` e `TInputLine` habilitam e desabilitam automaticamente esses comandos. Por exemplo, se um `TEditor` ou `TInputLine` estiver em foco, o comando `cmPaste` será habilitado. Se houver texto selecionado, os comandos `cmCut` e `cmCopy` também serão habilitados. Se nenhum `TEditor` ou `TInputLine` estiver em foco, esses comandos serão desabilitados.
 
 <div id="color"></div>
 
-# Extended color support
+# Suporte estendido de cores
 
-The Turbo Vision API has been extended to allow more than the original 16 colors.
+A API do Turbo Vision foi estendida para permitir mais do que as 16 cores originais.
 
-Colors can be specified using any of the following formats:
+As cores podem ser especificadas usando qualquer um dos seguintes formatos:
 
-* [BIOS color attributes](https://en.wikipedia.org/wiki/BIOS_color_attributes) (4-bit), the format used originally on MS-DOS.
-* RGB (24-bit).
-* `xterm-256color` palette indices (8-bit).
-* The *terminal default* color. This is the color used by terminal emulators when no display attributes (bold, color...) are enabled (usually white for foreground and black for background).
+* [Atributos de cor do BIOS](https://en.wikipedia.org/wiki/BIOS_color_attributes) (4 bits), o formato usado originalmente no MS-DOS.
+* RGB (24 bits).
+* Índices da paleta `xterm-256color` (8 bits).
+* A cor *padrão do terminal*. Esta é a cor usada pelos emuladores de terminal quando nenhum atributo de exibição (negrito, cor...) está habilitado (geralmente branco para primeiro plano e preto para segundo plano).
 
-Although Turbo Vision applications are likely to be ran in a terminal emulator, the API makes no assumptions about the display device. That is to say, the complexity of dealing with terminal emulators is hidden from the programmer and managed by Turbo Vision itself.
+Embora os aplicativos Turbo Vision provavelmente sejam executados em um emulador de terminal, a API não faz suposições sobre o dispositivo de exibição. Ou seja, a complexidade de lidar com emuladores de terminal é ocultada do programador e gerenciada pelo próprio Turbo Vision.
 
-For example: color support varies among terminals. If the programmer uses a color format not supported by the terminal emulator, Turbo Vision will quantize it to what the terminal can display. The following images represent the quantization of a 24-bit RGB picture to 256, 16 and 8 color palettes:
+Por exemplo: o suporte a cores varia entre os terminais. Se o programador usar um formato de cor não suportado pelo emulador de terminal, o Turbo Vision irá quantizá-lo para o que o terminal pode exibir. As imagens a seguir representam a quantização de uma imagem RGB de 24 bits para paletas de 256, 16 e 8 cores:
 
 | 24-bit color (original) | 256 colors |
 |:-:|:-:|
@@ -871,89 +875,90 @@ For example: color support varies among terminals. If the programmer uses a colo
 |:-:|:-:|
 |![mpv-shot0003](https://user-images.githubusercontent.com/20713561/111095334-7bb6aa00-853d-11eb-9a3f-e7decc0bac7d.png)|![mpv-shot0004](https://user-images.githubusercontent.com/20713561/111095335-7bb6aa00-853d-11eb-9098-38d6f6c3c1da.png)|
 
-Extended color support basically comes down to the following:
-* Turbo Vision has originally used [BIOS color attributes](https://en.wikipedia.org/wiki/BIOS_color_attributes) stored in an `uchar`. `ushort` is used to represent attribute pairs. This is still the case when using Borland C++.
-* In modern platforms a new type `TColorAttr` has been added which replaces `uchar`. It specifies a foreground and background color and a style. Colors can be specified in different formats (BIOS color attributes, 24-bit RGB...). Styles are the typical ones (bold, italic, underline...). There's also `TAttrPair`, which replaces `ushort`.
-* `TDrawBuffer`'s methods, which used to take `uchar` or `ushort` parameters to specify color attributes, now take `TColorAttr` or `TAttrPair`.
-* `TPalette`, which used to contain an array of `uchar`, now contains an array of `TColorAttr`. The `TView::mapColor` method also returns `TColorAttr` instead of `uchar`.
-* `TView::mapColor` has been made virtual so that the palette system can be bypassed without having to rewrite any `draw` methods.
-* `TColorAttr` and `TAttrPair` can be initialized with and casted into `uchar` and `ushort` in a way such that legacy code still compiles out-of-the-box without any change in functionality.
+O suporte estendido de cores basicamente se resume ao seguinte:
+* O Turbo Vision usou originalmente [atributos de cor do BIOS](https://en.wikipedia.org/wiki/BIOS_color_attributes) armazenados em um `uchar`. `ushort` é usado para representar pares de atributos. Este ainda é o caso ao usar Borland C++.
+* Em plataformas modernas, um novo tipo `TColorAttr` foi adicionado, que substitui `uchar`. Ele especifica uma cor de primeiro e segundo plano e um estilo. As cores podem ser especificadas em diferentes formatos (atributos de cor do BIOS, RGB de 24 bits...). Os estilos são os típicos (negrito, itálico, sublinhado...). Há também `TAttrPair`, que substitui `ushort`.
+* Os métodos `TDrawBuffer`, que costumavam usar os parâmetros `uchar` ou `ushort` para especificar atributos de cor, agora usam `TColorAttr` ou `TAttrPair`.
+* `TPalette`, que costumava conter uma matriz de `uchar`, agora contém uma matriz de `TColorAttr`. O método `TView::mapColor` também retorna `TColorAttr` em vez de `uchar`.
+* `TView::mapColor` foi tornado virtual para que o sistema de paleta possa ser ignorado sem ter que reescrever nenhum método `draw`.
+* `TColorAttr` e `TAttrPair` podem ser inicializados com e convertidos em `uchar` e `ushort` de uma forma tal que o código legado ainda compila pronto para uso sem nenhuma alteração na funcionalidade.
 
-Below is a more detailed explanation aimed at developers.
 
-## Data Types
+Abaixo está uma explicação mais detalhada destinada aos desenvolvedores.
 
-In the first place we will explain the data types the programmer needs to know in order to take advantage of the extended color support. To get access to them, you may have to define the macro `Uses_TColorAttr` before including `<tvision/tv.h>`.
+## Tipos de Dados
 
-All the types described in this section are *trivial*. This means that they can be `memset`'d and `memcpy`'d. But variables of these types are *uninitialized* when declared without initializer, just like primitive types. So make sure you don't manipulate them before initializing them.
+Em primeiro lugar, explicaremos os tipos de dados que o programador precisa saber para aproveitar o suporte estendido de cores. Para ter acesso a eles, você pode ter que definir a macro `Uses_TColorAttr` antes de incluir `<tvision/tv.h>`.
 
-### Color format types
+Todos os tipos descritos nesta seção são *triviais*. Isso significa que eles podem ser `memset`' e `memcpy`'. Mas variáveis ​​desses tipos são *não inicializadas* quando declaradas sem inicializador, assim como tipos primitivos. Portanto, certifique-se de não manipulá-los antes de inicializá-los.
 
-Several types are defined which represent different color formats.
-The reason why these types exist is to allow distinguishing color formats using the type system. Some of them also have public fields which make it easier to manipulate individual bits.
+### Tipos de formato de cor
 
-* `TColorBIOS` represents a BIOS color. It allows accessing the `r`, `g`, `b` and `bright` bits individually, and can be casted implicitly into/from `uint8_t`.
+Vários tipos são definidos que representam diferentes formatos de cor.
+A razão pela qual esses tipos existem é para permitir distinguir formatos de cor usando o sistema de tipos. Alguns deles também têm campos públicos que facilitam a manipulação de bits individuais.
 
-    The memory layout is:
+* `TColorBIOS` representa uma cor do BIOS. Ele permite acessar os bits `r`, `g`, `b` e `bright` individualmente, e pode ser convertido implicitamente em/de `uint8_t`.
 
-    * Bit 0: Blue (field `b`).
-    * Bit 1: Green (field `g`).
-    * Bit 2: Red (field `r`).
-    * Bit 3: Bright (field `bright`).
-    * Bits 4-7: unused.
+	O layout da memória é:
 
-    Examples of `TColorBIOS` usage:
+	* Bit 0: Azul (campo `b`).
+	* Bit 1: Verde (campo `g`).
+	* Bit 2: Vermelho (campo `r`).
+	* Bit 3: Brilhante (campo `bright`).
+	* Bits 4-7: não utilizados.
+
+	Exemplos de uso de `TColorBIOS`:
     ```c++
-    TColorBIOS bios = 0x4;  // 0x4: red.
-    bios.bright = 1;        // 0xC: light red.
-    bios.b = bios.r;        // 0xD: light magenta.
-    bios = bios ^ 3;        // 0xE: yellow.
-    uint8_t c = bios;       // Implicit conversion to integer types.
+    TColorBIOS bios = 0x4;  // 0x4: Vermelho.
+    bios.bright = 1;        // 0xC: Vermelho resplandescente.
+    bios.b = bios.r;        // 0xD: Magenta resplandescente.
+    bios = bios ^ 3;        // 0xE: Amarelo.
+    uint8_t c = bios;       // Conversão implícita para tipos inteiros.
     ```
 
-    In terminal emulators, BIOS colors are mapped to the basic 16 ANSI colors.
+    Em emuladores de terminal, as cores do BIOS são mapeadas para as 16 cores ANSI básicas.
 
-* `TColorRGB` represents a color in 24-bit RGB. It allows accessing the `r`, `g` and `b` bit fields individually, and can be casted implicitly into/from `uint32_t`.
+* `TColorRGB` representa uma cor em RGB de 24 bits. Ele permite acessar os campos de bits `r`, `g` e `b` individualmente, e pode ser convertido implicitamente em/de `uint32_t`.
 
-    The memory layout is:
+	O layout da memória é:
 
-    * Bits 0-7: Blue (field `b`).
-    * Bits 8-15: Green (field `g`).
-    * Bits 16-23: Red (field `r`).
-    * Bits 24-31: unused.
+	* Bits 0-7: Azul (campo `b`).
+	* Bits 8-15: Verde (campo `g`).
+	* Bits 16-23: Vermelho (campo `r`).
+	* Bits 24-31: não utilizado.
 
-    Examples of `TColorRGB` usage:
+    Exemplos de uso de `TColorRGB`:
     ```c++
     TColorRGB rgb = 0x9370DB;   // 0xRRGGBB.
     rgb = {0x93, 0x70, 0xDB};   // {R, G, B}.
-    rgb = rgb ^ 0xFFFFFF;       // Negated.
-    rgb.g = rgb.r & 0x88;       // Access to individual components.
-    uint32_t c = rgb;           // Implicit conversion to integer types.
+    rgb = rgb ^ 0xFFFFFF;       // Negado.
+    rgb.g = rgb.r & 0x88;       // Acesso a componentes individuais.
+    uint32_t c = rgb;           // Conversão implícita para tipos inteiros.
     ```
 
-* `TColorXTerm` represents an index into the `xterm-256color` color palette. It can be casted into and from `uint8_t`.
+* `TColorXTerm` representa um índice na paleta de cores `xterm-256color`. Ele pode ser convertido em e a partir de `uint8_t`.
 
 ### `TColorDesired`
 
-`TColorDesired` represents a color which the programmer intends to show on screen, encoded in any of the supported color types.
+`TColorDesired` representa uma cor que o programador pretende mostrar na tela, codificada em qualquer um dos tipos de cores suportados.
 
-A `TColorDesired` can be initialized in the following ways:
+Um `TColorDesired` pode ser inicializado das seguintes maneiras:
 
-* As a BIOS color: with a `char` literal or a `TColorBIOS` object:
+* Como uma cor do BIOS: com um literal `char` ou um objeto `TColorBIOS`:
 
     ```c++
     TColorDesired bios1 = '\xF';
     TColorDesired bios2 = TColorBIOS(0xF);
     ```
-* As a RGB color: with an `int` literal or a `TColorRGB` object:
+* Como uma cor RGB: com um literal `int` ou um objeto `TColorRGB`:
 
     ```c++
     TColorDesired rgb1 = 0xFF7700; // 0xRRGGBB.
     TColorDesired rgb2 = TColorRGB(0xFF, 0x77, 0x00); // {R, G, B}.
     TColorDesired rgb3 = TColorRGB(0xFF7700); // 0xRRGGBB.
     ```
-* As an XTerm palette index: with a `TColorXTerm` object.
-* As the *terminal default* color: through zero-initialization:
+* Como um índice de paleta XTerm: com um objeto `TColorXTerm`.
+* Como a cor *padrão do terminal*: por meio de inicialização zero:
 
     ```c++
     TColorDesired def1 {};
@@ -962,19 +967,19 @@ A `TColorDesired` can be initialized in the following ways:
     memset(&def2, 0, sizeof(def2));
     ```
 
-`TColorDesired` has methods to query the contained color, but you will usually not need to use them. See the struct definition in `<tvision/colors.h>` for more information.
+`TColorDesired` tem métodos para consultar a cor contida, mas normalmente você não precisará usá-los. Veja a definição de struct em `<tvision/colors.h>` para mais informações.
 
-Trivia: the name is inspired by [Scintilla](https://www.scintilla.org/index.html)'s `ColourDesired`.
+Curiosidade: o nome é inspirado em `ColourDesired` de [Scintilla](https://www.scintilla.org/index.html).
 
 ### `TColorAttr`
 
-`TColorAttr` describes the color attributes of a screen cell. This is the type you are most likely to interact with if you intend to change the colors in a view.
+`TColorAttr` descreve os atributos de cor de uma célula de tela. Este é o tipo com o qual você provavelmente irá interagir se pretender alterar as cores em uma visualização.
 
-A `TColorAttr` is composed of:
+Um `TColorAttr` é composto de:
 
-* A foreground color, of type `TColorDesired`.
-* A background color, of type `TColorDesired`.
-* A style bitmask containing a combination of the following flags:
+* Uma cor de primeiro plano, do tipo `TColorDesired`.
+* Uma cor de fundo, do tipo `TColorDesired`.
+* Uma máscara de bits de estilo contendo uma combinação dos seguintes sinalizadores:
 
     * `slBold`.
     * `slItalic`.
@@ -983,38 +988,38 @@ A `TColorAttr` is composed of:
     * `slReverse`.
     * `slStrike`.
 
-    These flags are based on the basic display attributes selectable through [ANSI escape codes](https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_(Select_Graphic_Rendition)_parameters). The results may vary between terminal emulators. `slReverse` is probably the least reliable of them: prefer using the `TColorAttr reverseAttribute(TColorAttr attr)` free function over setting this flag.
+    Esses sinalizadores são baseados nos atributos básicos de exibição selecionáveis ​​por meio de [códigos de escape ANSI](https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_(Select_Graphic_Rendition)_parameters). Os resultados podem variar entre emuladores de terminal. `slReverse` é provavelmente o menos confiável deles: prefira usar a função livre `TColorAttr reverseAttribute(TColorAttr attr)` em vez de definir este sinalizador.
 
-The most straight-forward way to create a `TColorAttr` is by means of the `TColorAttr(TColorDesired fg, TColorDesired bg, ushort style=0)` and `TColorAttr(int bios)` constructors:
+A maneira mais direta de criar um `TColorAttr` é por meio dos construtores `TColorAttr(TColorDesired fg, TColorDesired bg, ushort style=0)` e `TColorAttr(int bios)`:
 
 ```c++
-// Foreground: RGB 0x892312
-// Background: RGB 0x7F00BB
-// Style: Normal.
+// Primeiro plano: RGB 0x892312
+// Plano de fundo: RGB 0x7F00BB
+// Estilo: Normal.
 TColorAttr a1 = {TColorRGB(0x89, 0x23, 0x12), TColorRGB(0x7F, 0x00, 0xBB)};
 
-// Foreground: BIOS 0x7.
-// Background: RGB 0x7F00BB.
-// Style: Bold, Italic.
+// Primeiro plano: BIOS 0x7.
+// Plano de fundo: RGB 0x7F00BB.
+// Estilo: Bold, Italic.
 TColorAttr a2 = {'\x7', 0x7F00BB, slBold | slItalic};
 
-// Foreground: Terminal default.
-// Background: BIOS 0xF.
-// Style: Normal.
+// Primeiro plano: Terminal default.
+// Plano de fundo: BIOS 0xF.
+// Estilo: Normal.
 TColorAttr a3 = {{}, TColorBIOS(0xF)};
 
-// Foreground: Terminal default.
-// Background: Terminal default.
-// Style: Normal.
+// Primeiro plano: Terminal default.
+// Plano de fundo: Terminal default.
+// Estilo: Normal.
 TColorAttr a4 = {};
 
-// Foreground: BIOS 0x0
-// Background: BIOS 0x7
-// Style: Normal
+// Primeiro plano: BIOS 0x0
+// Plano de fundo: BIOS 0x7
+// Estilo: Normal
 TColorAttr a5 = 0x70;
 ```
 
-The fields of a `TColorAttr` can be accessed with the following free functions:
+Os campos de um `TColorAttr` podem ser acessados ​​com as seguintes funções gratuitas:
 
 ```c++
 TColorDesired getFore(const TColorAttr &attr);
@@ -1027,9 +1032,9 @@ void setStyle(TColorAttr &attr, ushort style);
 
 ### `TAttrPair`
 
-`TAttrPair` is a pair of `TColorAttr`, used by some API functions to pass two attributes at once.
+`TAttrPair` é um par de `TColorAttr`, usado por algumas funções de API para passar dois atributos de uma vez.
 
-You may initialize a `TAttrPair` with the `TAttrPair(const TColorAttrs &lo, const TColorAttrs &hi)` constructor:
+Você pode inicializar um `TAttrPair` com o construtor `TAttrPair(const TColorAttrs &lo, const TColorAttrs &hi)`:
 
 ```c++
 TColorAttr cNormal = {0x234983, 0x267232};
@@ -1039,19 +1044,19 @@ TDrawBuffer b;
 b.moveCStr(0, "Normal text, ~Highlighted text~", attrs);
 ```
 
-The attributes can be accessed with the `[0]` and `[1]` subindices:
+Os atributos podem ser acessados ​​com os subíndices `[0]` e `[1]`:
 
 ```c++
-TColorAttr lo = {0x892343, 0x271274};
-TColorAttr hi = '\x93';
+TColorAttr lo   = {0x892343, 0x271274};
+TColorAttr hi   = '\x93';
 TAttrPair attrs = {lo, hi};
 assert(lo == attrs[0]);
 assert(hi == attrs[1]);
 ```
 
-## Changing the appearance of a `TView`
+## Alterando a aparência de um `TView`
 
-Views are commonly drawn by means of a `TDrawBuffer`. Most `TDrawBuffer` member functions take color attributes by parameter. For example:
+As visualizações são comumente desenhadas por meio de um `TDrawBuffer`. A maioria das funções membro `TDrawBuffer` recebem atributos de cor por parâmetro. Por exemplo:
 
 ```c++
 ushort TDrawBuffer::moveStr(ushort indent, TStringView str, TColorAttr attr);
@@ -1059,54 +1064,54 @@ ushort TDrawBuffer::moveCStr(ushort indent, TStringView str, TAttrPair attrs);
 void TDrawBuffer::putAttribute(ushort indent, TColorAttr attr);
 ```
 
-However, the views provided with Turbo Vision usually store their color information in palettes. A view's palette can be queried with the following member functions:
+No entanto, as visualizações fornecidas com o Turbo Vision geralmente armazenam suas informações de cor em paletas. A paleta de uma visualização pode ser consultada com as seguintes funções de membro:
 
 ```c++
 TColorAttr TView::mapColor(uchar index);
 TAttrPair TView::getColor(ushort indices);
 ```
 
-* `mapColor` looks up a single color attribute in the view's palette, given an index into the palette. Remember that the palette indices for each view class can be found in the Turbo Vision headers. For example, `<tvision/views.h>` says the following about `TScrollBar`:
+* `mapColor` procura um único atributo de cor na paleta da visualização, dado um índice na paleta. Lembre-se de que os índices de paleta para cada classe de visualização podem ser encontrados nos cabeçalhos do Turbo Vision. Por exemplo, `<tvision/views.h>` diz o seguinte sobre `TScrollBar`:
 
     ```c++
     /* ---------------------------------------------------------------------- */
-    /*      class TScrollBar                                                  */
+    /*      classe TScrollBar                                                 */
     /*                                                                        */
-    /*      Palette layout                                                    */
+    /*      Layout da Paleta                                                  */
     /*        1 = Page areas                                                  */
     /*        2 = Arrows                                                      */
     /*        3 = Indicator                                                   */
     /* ---------------------------------------------------------------------- */
     ```
 
-* `getColor` is a helper function that allows querying two cell attributes at once. Each byte in the `indices` parameter contains an index into the palette. The `TAttrPair` result contains the two cell attributes.
+* `getColor` é uma função auxiliar que permite consultar dois atributos de célula de uma só vez. Cada byte no parâmetro `indices` contém um índice na paleta. O resultado `TAttrPair` contém os dois atributos de célula.
 
-    For example, the following can be found in the `draw` method of `TMenuBar`:
+Por exemplo, o seguinte pode ser encontrado no método `draw` de `TMenuBar`:
 
     ```c++
     TAttrPair cNormal = getColor(0x0301);
     TAttrPair cSelect = getColor(0x0604);
     ```
 
-    Which would be equivalent to this:
+    O que seria equivalente a isto:
 
     ```c++
     TAttrPair cNormal = {mapColor(1), mapColor(3)};
     TAttrPair cSelect = {mapColor(4), mapColor(6)};
     ```
 
-As an API extension, the `mapColor` method has been made `virtual`. This makes it possible to override Turbo Vision's hierarchical palette system with a custom solution without having to rewrite the `draw()` method.
+Como uma extensão de API, o método `mapColor` foi tornado `virtual`. Isso torna possível substituir o sistema de paleta hierárquica do Turbo Vision por uma solução personalizada sem precisar reescrever o método `draw()`.
 
-So, in general, there are three ways to use extended colors in views:
+Então, em geral, há três maneiras de usar cores estendidas em visualizações:
 
-1. By returning extended color attributes from an overridden `mapColor` method:
+1. Retornando atributos de cor estendidos de um método `mapColor` substituído:
 
 ```c++
-// The 'TMyScrollBar' class inherits from 'TScrollBar' and overrides 'TView::mapColor'.
+// A classe 'TMyScrollBar' herda de 'TScrollBar' e substitui 'TView::mapColor'.
 TColorAttr TMyScrollBar::mapColor(uchar index) noexcept
 {
-    // In this example the values are hardcoded,
-    // but they could be stored elsewhere if desired.
+	// Neste exemplo, os valores são codificados,
+	// mas eles podem ser armazenados em outro lugar, se desejado.
     switch (index)
     {
         case 1:     return {0x492983, 0x826124}; // Page areas.
@@ -1117,46 +1122,46 @@ TColorAttr TMyScrollBar::mapColor(uchar index) noexcept
 }
 ```
 
-2. By providing extended color attributes directly to `TDrawBuffer` methods, if the palette system is not being used. For example:
+2. Fornecendo atributos de cor estendidos diretamente para métodos `TDrawBuffer`, se o sistema de paleta não estiver sendo usado. Por exemplo:
 
     ```c++
-    // The 'TMyView' class inherits from 'TView' and overrides 'TView::draw'.
+	// A classe 'TMyView' herda de 'TView' e substitui 'TView::draw'.
     void TMyView::draw()
     {
         TDrawBuffer b;
         TColorAttr color {0x1F1C1B, 0xFAFAFA, slBold};
-        b.moveStr(0, "This is bold black text over a white background", color);
+        b.moveStr(0, "Isto é texto preto em negrito sobre um fundo branco", color);
         /* ... */
     }
     ```
 
-3. By modifying the palettes. There are two ways to do this:
+3. Modificando as paletas. Há duas maneiras de fazer isso:
 
-    1. By modifying the application palette after it has been built. Note that the palette elements are `TColorAttr`. For example:
+    1. Modificando a paleta do aplicativo após ela ter sido construída. Note que os elementos da paleta são `TColorAttr`. Por exemplo:
 
     ```c++
     void updateAppPalette()
     {
         TPalette &pal = TProgram::application->getPalete();
         pal[1] = {0x762892, 0x828712};              // TBackground.
-        pal[2] = {0x874832, 0x249838, slBold};      // TMenuView normal text.
-        pal[3] = {{}, {}, slItalic | slUnderline};  // TMenuView disabled text.
+        pal[2] = {0x874832, 0x249838, slBold};      // TMenuView texto normal.
+        pal[3] = {{}, {}, slItalic | slUnderline};  // TMenuView texto desabilitado.
         /* ... */
     }
     ```
 
-    2. By using extended color attributes in the application palette definition:
+	2. Usando atributos de cor estendidos na definição da paleta do aplicativo:
 
     ```c++
     static const TColorAttr cpMyApp[] =
     {
         {0x762892, 0x828712},               // TBackground.
-        {0x874832, 0x249838, slBold},       // TMenuView normal text.
-        {{}, {}, slItalic | slUnderline},   // TMenuView disabled text.
+        {0x874832, 0x249838, slBold},       // TMenuView texto normal.
+        {{}, {}, slItalic | slUnderline},   // TMenuView texto desabilitado.
         /* ... */
     };
 
-    // The 'TMyApp' class inherits from 'TApplication' and overrides 'TView::getPalette'.
+    // A classe 'TMyApp' herda de 'TApplication' e substitui 'TView::getPalette'.
     TPalette &TMyApp::getPalette() const
     {
         static TPalette palette(cpMyApp);
@@ -1164,49 +1169,51 @@ TColorAttr TMyScrollBar::mapColor(uchar index) noexcept
     }
     ```
 
-## Display capabilities
+## Capacidades de exibição
 
-`TScreen::screenMode` exposes some information about the display's color support:
+`TScreen::screenMode` expõe algumas informações sobre o suporte de cores da exibição:
 
-* If `(TScreen::screenMode & 0xFF) == TDisplay::smMono`, the display is monocolor (only relevant in DOS).
-* If `(TScreen::screenMode & 0xFF) == TDisplay::smBW80`, the display is grayscale (only relevant in DOS).
-* If `(TScreen::screenMode & 0xFF) == TDisplay::smCO80`, the display supports at least 16 colors.
-    * If `TScreen::screenMode & TDisplay::smColor256`, the display supports at least 256 colors.
-    * If `TScreen::screenMode & TDisplay::smColorHigh`, the display supports even more colors (e.g. 24-bit color). `TDisplay::smColor256` is also set in this case.
+* Se `(TScreen::screenMode & 0xFF) == TDisplay::smMono`, a exibição é monocolorida (relevante apenas no DOS).
+* Se `(TScreen::screenMode & 0xFF) == TDisplay::smBW80`, a exibição é em tons de cinza (relevante apenas no DOS).
+* Se `(TScreen::screenMode & 0xFF) == TDisplay::smCO80`, a exibição suporta pelo menos 16 cores.
+	* Se `TScreen::screenMode & TDisplay::smColor256`, o display suporta pelo menos 256 cores.
+	* Se `TScreen::screenMode & TDisplay::smColorHigh`, o display suporta ainda mais cores (por exemplo, cor de 24 bits). `TDisplay::smColor256` também é definido neste caso.
 
-## Backward-compatibility of color types
+## Compatibilidade com versões anteriores de tipos de cores
 
-The types defined previously represent concepts that are also important when developing for Borland C++:
+Os tipos definidos anteriormente representam conceitos que também são importantes no desenvolvimento para Borland C++:
 
-| Concept | Layout in Borland C++ | Layout in modern platforms |
+| Conceito | Layout em Borland C++ | Layout em plataformas modernas |
 |:-:|:-:|:-:|
-| Color Attribute | `uchar`. A BIOS color attribute. | `struct TColorAttr`. |
-| Color | A 4-bit number. | `struct TColorDesired`. |
-| Attribute Pair | `ushort`. An attribute in each byte. | `struct TAttrPair`. |
+| Atributo de cor | `uchar`. Um atributo de cor do BIOS. | `struct TColorAttr`. |
+| Cor | Um número de 4 bits. | `struct TColorDesired`. |
+| Par de atributos | `ushort`. Um atributo em cada byte. | `struct TAttrPair`. |
 
-One of this project's key principles is that the API should be used in the same way both in Borland C++ and modern platforms, that is to say, without the need for `#ifdef`s. Another principle is that legacy code should compile out-of-the-box, and adapting it to the new features should increase complexity as little as possible.
 
-Backward-compatibility is accomplished in the following way:
+Um dos princípios-chave deste projeto é que a API deve ser usada da mesma forma tanto no Borland C++ quanto em plataformas modernas, ou seja, sem a necessidade de `#ifdef`s. Outro princípio é que o código legado deve ser compilado pronto para uso, e adaptá-lo aos novos recursos deve aumentar a complexidade o mínimo possível.
 
-* In Borland C++, `TColorAttr` and `TAttrPair` are `typedef`'d to `uchar` and `ushort`, respectively.
-* In modern platforms, `TColorAttr` and `TAttrPair` can be used in place of `uchar` and `ushort`, respectively, since they are able to hold any value that fits into them and can be casted implicitly into/from them.
+A compatibilidade com versões anteriores é realizada da seguinte forma:
 
-    A `TColorAttr` initialized with `uchar` represents a BIOS color attribute. When converting back to `uchar`, the following happens:
+* No Borland C++, `TColorAttr` e `TAttrPair` são `typedef`'d para `uchar` e `ushort`, respectivamente.
+* Em plataformas modernas, `TColorAttr` e `TAttrPair` podem ser usados ​​no lugar de `uchar` e `ushort`, respectivamente, já que eles são capazes de manter qualquer valor que se encaixe neles e podem ser convertidos implicitamente para/a partir deles.
 
-    * If `fg` and `bg` are BIOS colors, and `style` is cleared, the resulting `uchar` represents the same BIOS color attribute contained in the `TColorAttr` (as in the code above).
-    * Otherwise, the conversion results in a color attribute that stands out, i.e. white on magenta, meaning that the programmer should consider replacing `uchar`/`ushort` with `TColorAttr`/`TAttrPair` if they intend to support the extended color attributes.
+	Um `TColorAttr` inicializado com `uchar` representa um atributo de cor do BIOS. Ao converter de volta para `uchar`, acontece o seguinte:
 
-    The same goes for `TAttrPair` and `ushort`, considering that it is composed of two `TColorAttr`.
+	* Se `fg` e `bg` forem cores do BIOS, e `style` estiver limpo, o `uchar` resultante representa o mesmo atributo de cor do BIOS contido no `TColorAttr` (como no código acima).
+	* Caso contrário, a conversão resulta em um atributo de cor que se destaca, ou seja, branco em magenta, o que significa que o programador deve considerar substituir `uchar`/`ushort` por `TColorAttr`/`TAttrPair` se pretender oferecer suporte aos atributos de cor estendidos.
 
-A use case of backward-compatibility within Turbo Vision itself is the `TPalette` class, core of the palette system. In its original design, it used a single data type (`uchar`) to represent different things: array length, palette indices or color attributes.
+	O mesmo vale para `TAttrPair` e `ushort`, considerando que ele é composto de dois `TColorAttr`.
 
-The new design simply replaces `uchar` with `TColorAttr`. This means there are no changes in the way `TPalette` is used, yet `TPalette` is now able to store extended color attributes.
+Um caso de uso de compatibilidade com versões anteriores dentro do próprio Turbo Vision é a classe `TPalette`, núcleo do sistema de paletas. Em seu design original, ele usava um único tipo de dados (`uchar`) para representar coisas diferentes: comprimento do array, índices de paleta ou atributos de cor.
 
-`TColorDialog` hasn't been remodeled, and thus it can't be used to pick extended color attributes at runtime.
+O novo design simplesmente substitui `uchar` por `TColorAttr`. Isso significa que não há mudanças na maneira como `TPalette` é usado, mas `TPalette` agora é capaz de armazenar atributos de cor estendidos.
 
-### Example: adding extended color support to legacy code
+`TColorDialog` não foi remodelado e, portanto, não pode ser usado para escolher atributos de cor estendidos em tempo de execução.
 
-The following pattern of code is common across `draw` methods of views:
+
+### Exemplo: adicionando suporte de cor estendido ao código legado
+
+O seguinte padrão de código é comum em métodos `draw` de visualizações:
 
 ```c++
 void TMyView::draw()
@@ -1228,13 +1235,14 @@ void TMyView::draw()
 }
 ```
 
-In this case, `ushort` is used both as a pair of palette indices and as a pair of color attributes. `getColor` now returns a `TAttrPair`, so even though this compiles out-of-the-box, extended attributes will be lost in the implicit conversion to `ushort`.
+Neste caso, `ushort` é usado tanto como um par de índices de paleta quanto como um par de atributos de cor. `getColor` agora retorna um `TAttrPair`, então, mesmo que isso seja compilado pronto para uso, atributos estendidos serão perdidos na conversão implícita para `ushort`.
 
-The code above still works just like it did originally. It's only non-BIOS color attributes that don't produce the expected result. Because of the compatibility between `TAttrPair` and `ushort`, the following is enough to enable support for extended color attributes:
+O código acima ainda funciona exatamente como funcionava originalmente. São apenas atributos de cor não-BIOS que não produzem o resultado esperado. Devido à compatibilidade entre `TAttrPair` e `ushort`, o seguinte é suficiente para habilitar o suporte para atributos de cor estendidos:
+
 
 ```diff
 -    ushort cFrame, cTitle;
 +    TAttrPair cFrame, cTitle;
 ```
 
-Nothing prevents you from using different variables for palette indices and color attributes, which is what should actually be done. The point of backward-compatibility is the ability to support new features without changing the program's logic, that is to say, minimizing the risk of increasing code complexity or introducing bugs.
+Nada impede que você use variáveis ​​diferentes para índices de paleta e atributos de cor, que é o que realmente deveria ser feito. O ponto da compatibilidade com versões anteriores é a capacidade de suportar novos recursos sem alterar a lógica do programa, ou seja, minimizar o risco de aumentar a complexidade do código ou introduzir bugs.
