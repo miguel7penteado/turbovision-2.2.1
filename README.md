@@ -29,7 +29,7 @@ O local original do projeto do editor de texto "turbinado" é https://github.com
     * [Vcpkg](#build-vcpkg)
     * [Turbo Vision as a CMake dependency](#build-cmake)
 * [Recursos](#features)
-* [API changes](#apichanges)
+* [Alterações na API](#apichanges)
 * [Applications using Turbo Vision](#applications)
 * [Unicode support](#unicode)
 * [Clipboard interaction](#clipboard)
