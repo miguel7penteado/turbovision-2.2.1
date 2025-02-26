@@ -30,7 +30,7 @@ O local original do projeto do editor de texto "turbinado" é https://github.com
     * [Turbo Vision as a CMake dependency](#build-cmake)
 * [Recursos](#features)
 * [Alterações na API](#apichanges)
-* [Applications using Turbo Vision](#applications)
+* [Aplicações que estão usando o Borland Turbo Vision](#applications)
 * [Unicode support](#unicode)
 * [Clipboard interaction](#clipboard)
 * [Extended color support](#color)
