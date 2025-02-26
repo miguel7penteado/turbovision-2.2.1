@@ -1,22 +1,20 @@
-# Turbo Vision
+# Borland Turbo Vision
 
-A modern port of Turbo Vision 2.0, the classical framework for text-based user interfaces. Now cross-platform and with Unicode support.
+Uma distribuição moderna do Turbo Vision 2.0, a clássica biblioteca de componentes para interfaces de usuário baseadas em texto. Agora a biblioteca suporta caracteres Unicode.
 
 ![tvedit in Konsole](https://user-images.githubusercontent.com/20713561/81506401-4fffdd80-92f6-11ea-8826-ee42612eb82a.png)
 
-I started this as a personal project at the very end of 2018. By May 2020 I considered it was very close to feature parity with the original, and decided to make it open.
+As contrubuições mais recentes a biblioteca foram:
 
-The original goals of this project were:
+* Fazer o Turbo Vision funcionar no Linux alterando a base de código legada o mínimo possível.
+* Mantendo-o funcional no DOS/Windows.
+* Ser o mais compatível possível no nível do código-fonte com aplicativos Turbo Vision antigos. Isso me levou o contribuidor [magiblot](https://github.com/magiblot) a implementar algumas das funções Borland C++ RTL, conforme explicado abaixo.
 
-* Making Turbo Vision work on Linux by altering the legacy codebase as little as possible.
-* Keeping it functional on DOS/Windows.
-* Being as compatible as possible at the source code level with old Turbo Vision applications. This led me to implement some of the Borland C++ RTL functions, as explained below.
+Em determinado momento, o contribuidor esclarece que pensou já ter feito o suficiente e que qualquer tentativa de reformular a biblioteca e superar suas limitações originais exigiria estender a API ou quebrar a compatibilidade com versões anteriores, e que uma grande reescrita seria provavelmente necessária.
 
-At one point I considered I had done enough, and that any attempts at revamping the library and overcoming its original limitations would require either extending the API or breaking backward compatibility, and that a major rewrite would be most likely necessary.
+No entanto, entre julho e agosto de 2020, foi encontrada a maneira de integrar suporte Unicode completo à arquitetura existente, e foi escrito o editor de texto [Turbo](https://github.com/magiblot/turbo) também disponibilizando, dessa forma, os novos recursos no Windows.
 
-However, between July and August 2020 I found the way to integrate full-fledged Unicode support into the existing architecture, wrote the [Turbo](https://github.com/magiblot/turbo) text editor and also made the new features available on Windows. So I am confident that Turbo Vision can now meet many of the expectations of modern users and programmers.
-
-The original location of this project is https://github.com/magiblot/tvision.
+O local original do projeto do editor de texto "turbinado" é https://github.com/magiblot/tvision .
 
 # Table of contents
 
@@ -39,58 +37,58 @@ The original location of this project is https://github.com/magiblot/tvision.
 
 <div id="what-for"></div>
 
-## What is Turbo Vision good for?
+## Para que serve o Turbo Vision?
 
-A lot has changed since Borland created Turbo Vision in the early 90's. Many GUI tools today separate appearance specification from behaviour specification, use safer or dynamic languages which do not segfault on error, and support either parallel or asynchronous programming, or both.
+Muita coisa mudou desde que a Borland criou o Turbo Vision no início dos anos 90. Muitas ferramentas de GUI hoje separam a especificação de aparência da especificação de comportamento, usam linguagens mais seguras ou dinâmicas que não segfaultam em caso de erro e suportam programação paralela ou assíncrona, ou ambas.
 
-Turbo Vision does not excel at any of those, but it certainly overcomes many of the issues programmers still face today when writing terminal applications:
+O Turbo Vision não se destaca em nenhuma delas, mas certamente supera muitos dos problemas que os programadores ainda enfrentam hoje ao escrever aplicativos de terminal:
 
-1. Forget about terminal capabilities and direct terminal I/O. When writing a Turbo Vision application, all you have to care about is what you want your application to behave and look like—there is no need to add workarounds in your code. Turbo Vision tries its best to produce the same results on all environments. For example: in order to get a bright background color on the Linux console, the *blink* attribute has to be set. Turbo Vision does this for you.
+1. Esqueça os recursos do terminal e E/S direta do terminal. Ao escrever um aplicativo Turbo Vision, tudo o que você precisa se preocupar é com o comportamento e a aparência do seu aplicativo — não há necessidade de adicionar soluções alternativas no seu código. O Turbo Vision tenta o melhor para produzir os mesmos resultados em todos os ambientes. Por exemplo: para obter uma cor de fundo brilhante no console Linux, o atributo *blink* precisa ser definido. O Turbo Vision faz isso para você.
 
-2. Reuse what has already been done. Turbo Vision provides many widget classes (also known as *views*), including resizable, overlapping windows, pull-down menus, dialog boxes, buttons, scroll bars, input boxes, check boxes and radio buttons. You may use and extend these; but even if you prefer creating your own, Turbo Vision already handles event dispatching, display of fullwidth Unicode characters, etc.: you do not need to waste time rewriting any of that.
+2. Reutilize o que já foi feito. O Turbo Vision fornece muitas classes de widget (também conhecidas como *views*), incluindo janelas redimensionáveis ​​e sobrepostas, menus suspensos, caixas de diálogo, botões, barras de rolagem, caixas de entrada, caixas de seleção e botões de opção. Você pode usar e estender esses; mas mesmo se preferir criar os seus próprios, o Turbo Vision já lida com o despacho de eventos, exibição de caracteres Unicode de largura total, etc.: você não precisa perder tempo reescrevendo nada disso.
 
-3. Can you imagine writing a text-based interface that works both on Linux and Windows (and thus is cross-platform) out-of-the-box, with no `#ifdef`s? Turbo Vision makes this possible. First: Turbo Vision keeps on using `char` arrays instead of relying on the implementation-defined and platform-dependent `wchar_t` or `TCHAR`. Second: thanks to UTF-8 support in `setlocale` in [recent versions of Microsoft's RTL](https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/setlocale-wsetlocale#utf-8-support), code like the following will work as intended:
+3. Você consegue imaginar escrever uma interface baseada em texto que funcione tanto no Linux quanto no Windows (e, portanto, seja multiplataforma) pronta para uso, sem `#ifdef`s? O Turbo Vision torna isso possível. Primeiro: o Turbo Vision continua usando arrays `char` em vez de depender do `wchar_t` ou `TCHAR` definido pela implementação e dependente da plataforma. Segundo: graças ao suporte UTF-8 em `setlocale` em [versões recentes do RTL da Microsoft](https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/setlocale-wsetlocale#utf-8-support), um código como o seguinte funcionará conforme o esperado.
     ```c++
     std::ifstream f("コンピュータ.txt"); // On Windows, the RTL converts this to the system encoding on-the-fly.
     ```
 
 <div id="how-to"></div>
 
-## How do I use Turbo Vision?
+## Como usar o Turbo Vision?
 
-You can get started with the [Turbo Vision For C++ User's Guide](https://archive.org/details/BorlandTurboVisionForCUserSGuide/mode/1up), and look at the sample applications [`hello`](https://github.com/magiblot/tvision/blob/master/hello.cpp), [`tvdemo`](https://github.com/magiblot/tvision/tree/master/examples/tvdemo) and [`tvedit`](https://github.com/magiblot/tvision/tree/master/examples/tvedit). Once you grasp the basics,
-I suggest you take a look at the [Turbo Vision 2.0 Programming Guide](https://archive.org/details/bitsavers_borlandTurrogrammingGuide1992_25707423), which is, in my opinion, more intuitive and easier to understand, despite using Pascal. By then you will probably be interested in the [`palette`](https://github.com/magiblot/tvision/tree/master/examples/palette) example, which contains a detailed description of how palettes are used.
+Você pode começar com o [Guia do usuário do Turbo Vision para C++](https://archive.org/details/BorlandTurboVisionForCUserSGuide/mode/1up) e ver os aplicativos de exemplo [`hello`](https://github.com/magiblot/tvision/blob/master/hello.cpp), [`tvdemo`](https://github.com/magiblot/tvision/tree/master/examples/tvdemo) e [`tvedit`](https://github.com/magiblot/tvision/tree/master/examples/tvdemo). Depois que você entender o básico,
+sugiro que dê uma olhada no [Guia de programação do Turbo Vision 2.0](https://archive.org/details/bitsavers_borlandTurrogrammingGuide1992_25707423), que é, na minha opinião, mais intuitivo e fácil de entender, apesar de usar Pascal. Até lá, você provavelmente estará interessado no exemplo [`palette`](https://github.com/magiblot/tvision/tree/master/examples/palette), que contém uma descrição detalhada de como as paletas são usadas.
 
-Don't forget to check out the <a href="#features">features</a> and <a href="#apichanges">API changes</a> sections as well.
+Não se esqueça de conferir também as seções <a href="#features">recursos</a> e <a href="#apichanges">alterações na API</a>.
 
 <div id="downloads"></div>
 
-## Releases and downloads
+## Releases e downloads
 
-This project has no stable releases for the time being. If you are a developer, try to stick to the latest commit and report any issues you find while upgrading.
+Este projeto não tem versões estáveis ​​no momento. Se você é um desenvolvedor, tente seguir o último commit e reporte quaisquer problemas que encontrar durante a atualização.
 
-If you just want to test the demo applications:
+Se você só quer testar os aplicativos de demonstração:
 
-* Unix systems: you'll have to build Turbo Vision yourself. You may follow the [build instructions](#build-linux) below.
-* Windows: you can find up-to-date binaries in the [Actions](https://github.com/magiblot/tvision/actions?query=branch:master+event:push) section. Click on the first successful workflow (with a green tick) in the list. At the bottom of the workflow page, as long as you have logged in to GitHub, you'll find an *Artifacts* section with the following files:
-    * `examples-dos32.zip`: 32-bit executables built with Borland C++. No Unicode support.
-    * `examples-x86.zip`: 32-bit executables built with MSVC. Windows Vista or later required.
-    * `examples-x64.zip`: 64-bit executables built with MSVC. x64 Windows Vista or later required.
+*  Sistemas Unix: você terá que construir o Turbo Vision você mesmo. Você pode seguir as [instruções de construção](#build-linux) abaixo.
+*  Windows: você pode encontrar binários atualizados na seção [Ações](https://github.com/magiblot/tvision/actions?query=branch:master+event:push). Clique no primeiro fluxo de trabalho bem-sucedido (com uma marca verde) na lista. Na parte inferior da página do fluxo de trabalho, desde que você tenha feito login no GitHub, você encontrará uma seção *Artifacts* com os seguintes arquivos:
+* `examples-dos32.zip`: executáveis ​​de 32 bits construídos com Borland C++. Sem suporte a Unicode.
+* `examples-x86.zip`: executáveis ​​de 32 bits criados com MSVC. Windows Vista ou posterior necessário.
+* `examples-x64.zip`: executáveis ​​de 64 bits criados com MSVC. x64 Windows Vista ou posterior necessário.
 
-## Build environment
+## Ambiente de Compilação e Linkagem
 
 <div id="build-linux"></div>
 
 ### Linux
 
-Turbo Vision can be built as an static library with CMake and GCC/Clang.
+O Turbo Vision pode ser criado como uma biblioteca estática com CMake e GCC/Clang.
 
 ```sh
 cmake . -B ./build -DCMAKE_BUILD_TYPE=Release && # Could also be 'Debug', 'MinSizeRel' or 'RelWithDebInfo'.
 cmake --build ./build # or `cd ./build; make`
 ```
 
-CMake versions older than 3.13 may not support the `-B` option. You can try the following instead:
+Versões do CMake mais antigas que 3.13 podem não suportar a opção `-B`. Você pode tentar o seguinte:
 
 ```sh
 mkdir -p build; cd build
@@ -98,124 +96,124 @@ cmake .. -DCMAKE_BUILD_TYPE=Release &&
 cmake --build .
 ```
 
-The above produces the following files:
+Os comandos acima produzem os seguintes arquivos:
 
-* `libtvision.a`, which is the Turbo Vision library.
-* The demo applications `hello`, `tvdemo`, `tvedit`, `tvdir`, which were bundled with the original Turbo Vision (although some of them have a few improvements).
-* The demo applications `mmenu` and `palette` from Borland's Technical Support.
-* `tvhc`, the Turbo Vision Help Compiler.
+*  O arquivo `libtvision.a` é a biblioteca estática do Turbo Vision.
+*  Os aplicativos de demonstração `hello`, `tvdemo`, `tvedit`, `tvdir`, que foram empacotados com o Turbo Vision original (embora alguns deles tenham algumas melhorias).
+*  Os aplicativos de demonstração `mmenu` e `palette` do Suporte Técnico da Borland.
+* `tvhc`, o Turbo Vision Help Compiler.
 
-The library and executables can be found in `./build`.
+A biblioteca e os executáveis ​​podem ser encontrados na pasta `./build`.
 
-The build requirements are:
+Os requisitos de compilação e linkagem são:
 
-* A compiler supporting C++14.
-* `libncursesw` (note the 'w').
-* `libgpm` for mouse support on the Linux console (optional).
+*  Um compilador com suporte a C++14.
+*  `libncursesw` (note o 'w').
+*  `libgpm` para suporte do mouse no console Linux (opcional).
 
-If your distribution provides separate *devel* packages (e.g. `libncurses-dev`, `libgpm-dev` in Debian-based distros), install these too.
+Se sua distribuição fornece *pacotes de desenvolvimento* separados (por exemplo, `libncurses-dev`, `libgpm-dev` em distribuições baseadas em Debian), instale-os também.
 
 <div id="build-linux-runtime"></div>
 
-The runtime requirements are:
+Os requisitos de tempo de execução são:
 
-* `xsel` or `xclip` for clipboard support in X11 environments.
-* `wl-clipboard` for clipboard support in Wayland environments.
+*  As aplicações`xsel` ou `xclip` (que compõem o kit X11) para suporte à área de transferência em ambientes X11.
+* `wl-clipboard` para suporte à área de transferência em ambientes Wayland.
 
-The minimal command line required to build a Turbo Vision application (e.g. `hello.cpp` with GCC) from this project's root is:
+A linha de comando mínima necessária para construir um aplicativo Turbo Vision (por exemplo, `hello.cpp` com GCC) a partir da raiz deste projeto é:
 
 ```sh
 g++ -std=c++14 -o hello hello.cpp ./build/libtvision.a -Iinclude -lncursesw -lgpm
 ```
 
-You may also need:
+Você também pode precisar de:
 
-* `-Iinclude/tvision` if your application uses Turbo Vision 1.x includes (`#include <tv.h>` instead of `#include <tvision/tv.h>`).
+* `-Iinclude/tvision` se seu aplicativo usar o Turbo Vision 1.x includes (`#include <tv.h>` em vez de `#include <tvision/tv.h>`).
 
-* `-Iinclude/tvision/compat/borland` if your application includes Borland headers (`dir.h`, `iostream.h`, etc.).
+* `-Iinclude/tvision/compat/borland` se seu aplicativo incluir cabeçalhos Borland (`dir.h`, `iostream.h`, etc.).
 
-* On Gentoo (and possibly others): `-ltinfow` if both `libtinfo.so` and `libtinfow.so` are available in your system. Otherwise, you may get a segmentation fault when running Turbo Vision applications ([#11](https://github.com/magiblot/tvision/issues/11)). Note that `tinfo` is bundled with `ncurses`.
+* No Gentoo (e possivelmente outros): `-ltinfow` se `libtinfo.so` e `libtinfow.so` estiverem disponíveis no seu sistema. Caso contrário, você pode obter uma falha de segmentação ao executar aplicativos Turbo Vision ([#11](https://github.com/magiblot/tvision/issues/11)). Observe que `tinfo` é empacotado com `ncurses`.
 
-`-lgpm` is only necessary if Turbo Vision was built with `libgpm` support.
+`-lgpm` só é necessário se o Turbo Vision foi criado com suporte a `libgpm`.
 
-The backward-compatibility headers in `include/tvision/compat/borland` emulate the Borland C++ RTL. Turbo Vision's source code still depends on them, and they could be useful if porting old applications. This also means that including `tvision/tv.h` will bring several `std` names to the global namespace.
+Os cabeçalhos de compatibilidade com versões anteriores em `include/tvision/compat/borland` emulam o Borland C++ RTL. O código-fonte do Turbo Vision ainda depende deles, e eles podem ser úteis se estiver portando aplicativos antigos. Isso também significa que incluir `tvision/tv.h` trará vários nomes `std` para o namespace global.
 
 <div id="build-msvc"></div>
 
 ### Windows (MSVC)
 
-The build process with MSVC is slightly more complex, as there are more options to choose from. Note that you will need different build directories for different target architectures. For instance, to generate optimized binaries:
+O processo de construção com MSVC é um pouco mais complexo, pois há mais opções para escolher. Observe que você precisará de diferentes diretórios de construção para diferentes arquiteturas de destino. Por exemplo, para gerar binários otimizados:
 
 ```sh
 cmake . -B ./build && # Add '-A x64' (64-bit) or '-A Win32' (32-bit) to override the default platform.
 cmake --build ./build --config Release # Could also be 'Debug', 'MinSizeRel' or 'RelWithDebInfo'.
 ```
 
-In the example above, `tvision.lib` and the example applications will be placed at `./build/Release`.
+No exemplo acima, `tvision.lib` e os aplicativos de exemplo serão colocados em `./build/Release`.
 
-If you wish to link Turbo Vision statically against Microsoft's run-time library (`/MT` instead of `/MD`), enable the `TV_USE_STATIC_RTL` option (`-DTV_USE_STATIC_RTL=ON` when calling `cmake`).
+Se você deseja vincular o Turbo Vision estaticamente à biblioteca de tempo de execução da Microsoft (`/MT` em vez de `/MD`), habilite a opção `TV_USE_STATIC_RTL` (`-DTV_USE_STATIC_RTL=ON` ao chamar `cmake`).
 
-If you wish to link an application against Turbo Vision, note that MSVC won't allow you to mix `/MT` with `/MD` or debug with non-debug binaries. All components have to be linked against the RTL in the same way.
+Se você deseja vincular um aplicativo ao Turbo Vision, observe que o MSVC não permitirá que você misture `/MT` com `/MD` ou depure com binários não depuráveis. Todos os componentes devem ser vinculados ao RTL da mesma forma.
 
-If you develop your own Turbo Vision application make sure to enable the following compiler flags, or else you will get compilation errors when including `<tvision/tv.h>`:
+Se você desenvolver seu próprio aplicativo Turbo Vision, certifique-se de habilitar os seguintes sinalizadores do compilador, ou então você obterá erros de compilação ao incluir `<tvision/tv.h>`:
 
 ```
 /permissive-
 /Zc:__cplusplus
 ```
 
-If you use [Turbo Vision as a CMake submodule](#build-cmake), these flags will be enabled automatically.
+Se você usar [Turbo Vision como um submódulo CMake](#build-cmake), esses sinalizadores serão habilitados automaticamente.
 
-**Note:** Turbo Vision uses `setlocale` to set the [RTL functions in UTF-8 mode](https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/setlocale-wsetlocale#utf-8-support). This won't work if you use an old version of the RTL.
+**Observação:** o Turbo Vision usa `setlocale` para definir as [funções RTL no modo UTF-8](https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/setlocale-wsetlocale#utf-8-support). Isso não funcionará se você usar uma versão antiga do RTL.
 
-With the RTL statically linked in, and if UTF-8 is supported in `setlocale`, Turbo Vision applications are portable and work by default on **Windows Vista and later**.
+Com o RTL vinculado estaticamente, e se o UTF-8 for suportado em `setlocale`, os aplicativos Turbo Vision são portáteis e funcionam por padrão no **Windows Vista e posterior**.
 
 <div id="build-mingw"></div>
 
 ### Windows (MinGW)
 
-Once your MinGW environment is properly set up, build is done in a similar way to Linux:
+Depois que seu ambiente MinGW estiver configurado corretamente, a compilação será feita de maneira semelhante ao Linux:
 ```sh
 cmake . -B ./build -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release &&
 cmake --build ./build
 ```
-In the example above, `libtvision.a` and all examples are in `./build` if `TV_BUILD_EXAMPLES` option is `ON` (the default).
+No exemplo acima, `libtvision.a` e todos os exemplos estão em `./build` se a opção `TV_BUILD_EXAMPLES` for `ON` (o padrão).
 
-If you wish to link an application against Turbo Vision, simply add `-L./build/lib -ltvision` to your linker and `-I./include` to your compiler
+Se você deseja vincular um aplicativo ao Turbo Vision, basta adicionar `-L./build/lib -ltvision` ao seu vinculador e `-I./include` ao seu compilador
 
 <div id="build-borland"></div>
 
 ### Windows/DOS (Borland C++)
 
-Turbo Vision can still be built either as a DOS or Windows library with Borland C++. Obviously, there is no Unicode support here.
+O Turbo Vision ainda pode ser construído como uma biblioteca DOS ou Windows com Borland C++. Obviamente, não há suporte a Unicode aqui.
 
-I can confirm the build process works with:
+Posso confirmar que o processo de construção funciona com:
 
-* Borland C++ 4.52 with the Borland PowerPack for DOS.
+* Borland C++ 4.52 com o Borland PowerPack para DOS.
 * Turbo Assembler 4.0.
 
-You may face different problems depending on your build environment. For instance, Turbo Assembler needs a patch to work under Windows 95. On Windows XP everything seems to work fine. On Windows 10, MAKE may emit the error `Fatal: Command arguments too long`, which can be fixed by upgrading MAKE to the one bundled with Borland C++ 5.x.
+Você pode enfrentar problemas diferentes dependendo do seu ambiente de construção. Por exemplo, o Turbo Assembler precisa de um patch para funcionar no Windows 95. No Windows XP, tudo parece funcionar bem. No Windows 10, o MAKE pode emitir o erro `Fatal: Argumentos de comando muito longos`, que pode ser corrigido atualizando o MAKE para o que vem com o Borland C++ 5.x.
 
-Yes, this works on 64-bit Windows 10. What won't work is the Borland C++ installer, which is a 16-bit application. You will have to run it on another environment or try your luck with [winevdm](https://github.com/otya128/winevdm).
+Sim, isso funciona no Windows 10 de 64 bits. O que não funcionará é o instalador do Borland C++, que é um aplicativo de 16 bits. Você terá que executá-lo em outro ambiente ou tentar a sorte com [winevdm](https://github.com/otya128/winevdm).
 
-A Borland Makefile can be found in the `project` directory. Build can be done by doing:
+Um Borland Makefile pode ser encontrado no diretório `project`. A construção pode ser feita fazendo:
 
 ```sh
 cd project
 make.exe <options>
 ```
 
-Where `<options>` can be:
+Onde `<options>` pode ser:
 
-* `-DDOS32` for 32-bit DPMI applications (which still work on 64-bit Windows).
-* `-DWIN32` for 32-bit native Win32 applications (not possible for TVDEMO, which relies on `farcoreleft()` and other antiquities).
-* `-DDEBUG` to build debug versions of the application and the library.
-* `-DTVDEBUG` to link the applications with the debug version of the library.
-* `-DOVERLAY`, `-DALIGNMENT={2,4}`, `-DEXCEPTION`, `-DNO_STREAMABLE`, `-DNOTASM` for things I have nave never used but appeared in the original makefiles.
+* `-DDOS32` para aplicativos DPMI de 32 bits (que ainda funcionam no Windows de 64 bits).
+* `-DWIN32` para aplicativos Win32 nativos de 32 bits (não é possível para TVDEMO, que depende de `farcoreleft()` e outras antiguidades).
+* `-DDEBUG` para construir versões de depuração do aplicativo e da biblioteca.
+* `-DTVDEBUG` para vincular os aplicativos à versão de depuração da biblioteca.
+* `-DOVERLAY`, `-DALIGNMENT={2,4}`, `-DEXCEPTION`, `-DNO_STREAMABLE`, `-DNOTASM` para coisas que nunca usei, mas que apareceram nos makefiles originais.
 
-This will compile the library into a `LIB` directory next to `project`, and will compile executables for the demo applications in their respective `examples/*` directories.
+Isso compilará a biblioteca em um diretório `LIB` ao lado de `project` e compilará executáveis ​​para os aplicativos de demonstração em seus respectivos diretórios `examples/*`.
 
-I'm sorry, the root makefile assumes it is executed from the `project` directory. You can still run the original makefiles directly (in `source/tvision` and `examples/*`) if you want to use different settings.
+Desculpe, o makefile raiz assume que ele é executado a partir do diretório `project`. Você ainda pode executar os makefiles originais diretamente (em `source/tvision` e `examples/*`) se quiser usar configurações diferentes.
 
 <div id="build-vcpkg"></div>
 
