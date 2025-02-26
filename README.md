@@ -18,8 +18,8 @@ O local original do projeto do editor de texto "turbinado" é https://github.com
 
 # Table of contents
 
-* [What is Turbo Vision good for?](#what-for)
-* [How do I use Turbo Vision?](#how-to)
+* [Para que serve o Turbo Vision?](#what-for)
+* [Como usar o Turbo Vision?](#how-to)
 * [Releases and downloads](#downloads)
 * Build environment
     * [Linux](#build-linux)
