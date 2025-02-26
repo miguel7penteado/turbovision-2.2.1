@@ -1,65 +1,98 @@
 /*-----------------------------------------------------*/
 /*                                                     */
-/*   Turbo Vision 1.0                                  */
 /*   Turbo Vision TVHC header file                     */
-/*   Copyright (c) 1991 by Borland International       */
 /*                                                     */
 /*-----------------------------------------------------*/
 
-#if !defined( TVHC_H )
-#define TVHC_H
+/* $Copyright: 1994 */
 
-const int MAXSIZE = 80;
+#if !defined( __TVHC_H )
+#define __TVHC_H
+
+#define Uses_fstream
+#define Uses_TSortedCollection
+#define Uses_TObject
+#define Uses_TPoint
+#include <tvision/tv.h>
+
+#if !defined( __HELPBASE_H )
+#include "tvision/helpbase.h"
+#endif  // __HELPBASE_H
+
+#if !defined( __DIR_H )
+#include <dir.h>
+#endif  // __DIR_H
+
 const int MAXSTRSIZE=256;
+const int MAXHELPTOPICID=16379;
 const char commandChar[] = ".";
-const int bufferSize = 4096;
 
-typedef enum State { undefined, wrapping, notWrapping } _State;
+enum State { undefined, wrapping, notWrapping };
 
-class TProtectedStream : public CLY_std(fstream)
+class TProtectedStream : public fstream
 {
+
 public:
-    TProtectedStream( char *aFileName, CLY_OpenModeT aMode );
+
+#ifdef __BORLANDC__
+    typedef ios::open_mode openmode;
+#else
+    typedef ios::openmode openmode;
+#endif
+
+    TProtectedStream( const char *aFileName, openmode aMode );
 
 private:
-    char  fileName[MAXSIZE];
-    CLY_OpenModeT mode;
+
+    char fileName[MAXPATH];
+    openmode mode;
+
 };
 
 // Topic Reference
 
 struct TFixUp
 {
-    long pos;
+
+    streampos pos;
     TFixUp *next;
+
 };
 
 union Content
 {
-    int /*ushort*/ value;
+
+    uint value;
     TFixUp *fixUpList;
+
 };
 
-struct TReference 
+struct TReference
 {
+
     char *topic;
     Boolean resolved;
     Content val;
+
 };
 
 class TRefTable : public TSortedCollection
 {
 
 public:
+
     TRefTable( ccIndex aLimit, ccIndex aDelta );
+
     virtual int compare( void *key1,void *key2 );
     virtual void freeItem( void *item );
-    TReference *getReference( char *topic );
+    TReference *getReference( const char *topic );
     virtual void *keyOf( void *item );
 
 private:
+
     virtual void *readItem( ipstream& ) { return 0; };
     virtual void writeItem( void *, opstream& ) {};
+
 };
 
 struct TCrossRefNode
@@ -68,28 +101,21 @@ struct TCrossRefNode
     int offset;
     uchar length;
     TCrossRefNode *next;
+
 };
 
 class TTopicDefinition : public TObject
 {
+
 public:
 
-    TTopicDefinition(char *aTopic, ushort aValue);
+    TTopicDefinition(const char *aTopic, uint aValue);
     ~TTopicDefinition(void);
 
     char *topic;
-    ushort value;
+    uint value;
     TTopicDefinition *next;
 
 };
 
-char helpName[MAXSIZE];
-uchar buffer[bufferSize];
-int ofs;
-TRefTable *refTable = 0;
-TCrossRefNode  *xRefs;
-char line[MAXSTRSIZE] = "";
-Boolean lineInBuffer = False;
-int lineCount = 0;
-
-#endif  // TVHC_H
+#endif  // __TVHC_H

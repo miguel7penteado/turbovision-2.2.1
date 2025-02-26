@@ -300,14 +300,14 @@ where you can customize the colors of the display.
 .topic OSaveDesktop
  Options³Save Desktop Ü
   ßßßßßßßßßßßßßßßßßßßßß
-Saves the state of all open windows to a file call TVDEMO.DSK. This
+Saves the state of all open windows to a file call TVDEMO.DST. This
 file can be reloaded by selecting {Options³Restore Desktop:ORestoreDesktop}.
 
 .topic ORestoreDesktop
  Options³Restore Desktop Ü
   ßßßßßßßßßßßßßßßßßßßßßßßß
 Restore a previously-saved state of all open windows from a file
-call TVDEMO.DSK. This file is saved via the
+call TVDEMO.DST. This file is saved via the
 {Options³Save Desktop:OSaveDesktop} menu command.
 
 .topic FOFileOpenDBox
@@ -502,4 +502,4 @@ the current color or attribute settings.
 
 Changes do not take effect on the desktop until you close the
 Colors dialog box by choosing OK.
-
+
