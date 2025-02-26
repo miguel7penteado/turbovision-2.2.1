@@ -20,7 +20,7 @@ O local original do projeto do editor de texto "turbinado" é https://github.com
 
 * [Para que serve o Turbo Vision?](#what-for)
 * [Como usar o Turbo Vision?](#how-to)
-* [Releases and downloads](#downloads)
+* [Releases e downloads](#downloads)
 * Build environment
     * [Linux](#build-linux)
     * [Windows (MSVC)](#build-msvc)
@@ -28,7 +28,7 @@ O local original do projeto do editor de texto "turbinado" é https://github.com
     * [Windows/DOS (Borland C++)](#build-borland)
     * [Vcpkg](#build-vcpkg)
     * [Turbo Vision as a CMake dependency](#build-cmake)
-* [Features](#features)
+* [Recursos](#features)
 * [API changes](#apichanges)
 * [Applications using Turbo Vision](#applications)
 * [Unicode support](#unicode)
