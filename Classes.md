@@ -1,3 +1,6 @@
+![image](https://github.com/user-attachments/assets/4bb4e469-f3ae-49cd-8be3-169526ec2eb5)
+
+
 # Lista de Classes da biblioteca
 
 |    Nome da Classe   |                     Funcionalidade                    |
