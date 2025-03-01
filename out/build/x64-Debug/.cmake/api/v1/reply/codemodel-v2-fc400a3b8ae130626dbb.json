@@ -1,0 +1,329 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						2,
+						11
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.5"
+					},
+					"projectIndex" : 0,
+					"source" : "."
+				},
+				{
+					"build" : "source",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-source-Debug-a4e769963fb218901cc1.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.5"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "source",
+					"targetIndexes" : 
+					[
+						10
+					]
+				},
+				{
+					"build" : "examples",
+					"childIndexes" : 
+					[
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-examples-Debug-2e8964349ffea94e1580.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.5"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "examples",
+					"targetIndexes" : 
+					[
+						2
+					]
+				},
+				{
+					"build" : "examples/tvedit",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-examples.tvedit-Debug-e4bae4ce51a6a5bc6a7a.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.5"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 0,
+					"source" : "examples/tvedit",
+					"targetIndexes" : 
+					[
+						7
+					]
+				},
+				{
+					"build" : "examples/tvdemo",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-examples.tvdemo-Debug-1464458a841bfa7ae63e.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.5"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 0,
+					"source" : "examples/tvdemo",
+					"targetIndexes" : 
+					[
+						5
+					]
+				},
+				{
+					"build" : "examples/tvdir",
+					"jsonFile" : "directory-examples.tvdir-Debug-97bb6a650e8865c88e38.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.5"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 0,
+					"source" : "examples/tvdir",
+					"targetIndexes" : 
+					[
+						6
+					]
+				},
+				{
+					"build" : "examples/tvforms",
+					"jsonFile" : "directory-examples.tvforms-Debug-3d85ffed6902d14a9b53.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.5"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 0,
+					"source" : "examples/tvforms",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						8
+					]
+				},
+				{
+					"build" : "examples/tvhc",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-examples.tvhc-Debug-66590739a63164367f9d.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.5"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 0,
+					"source" : "examples/tvhc",
+					"targetIndexes" : 
+					[
+						9
+					]
+				},
+				{
+					"build" : "examples/mmenu",
+					"jsonFile" : "directory-examples.mmenu-Debug-15ba6c049c89e96df1be.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.5"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 0,
+					"source" : "examples/mmenu",
+					"targetIndexes" : 
+					[
+						3
+					]
+				},
+				{
+					"build" : "examples/palette",
+					"jsonFile" : "directory-examples.palette-Debug-429675c52d055947fde6.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.5"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 0,
+					"source" : "examples/palette",
+					"targetIndexes" : 
+					[
+						4
+					]
+				},
+				{
+					"build" : "examples/avscolor",
+					"jsonFile" : "directory-examples.avscolor-Debug-47ba3b0bcd16d1002c2c.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.5"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 0,
+					"source" : "examples/avscolor"
+				},
+				{
+					"build" : "test",
+					"jsonFile" : "directory-test-Debug-f18be1977b403cfd1a50.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.5"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "test"
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11
+					],
+					"name" : "tvision",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 6,
+					"id" : "genparts::@65c67d41fece7a2213d4",
+					"jsonFile" : "target-genparts-Debug-a0bfbd534c84af73c3a3.json",
+					"name" : "genparts",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 6,
+					"id" : "genphone::@65c67d41fece7a2213d4",
+					"jsonFile" : "target-genphone-Debug-0a030f22f94a4a03a644.json",
+					"name" : "genphone",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "hello::@714eac15f71a94114fdf",
+					"jsonFile" : "target-hello-Debug-bbe9ef0c922f64be5dce.json",
+					"name" : "hello",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 8,
+					"id" : "mmenu::@ebdefcf5102105d227ae",
+					"jsonFile" : "target-mmenu-Debug-aae4375e83771feb11ea.json",
+					"name" : "mmenu",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 9,
+					"id" : "palette::@a42bb50723fecdb2f3dd",
+					"jsonFile" : "target-palette-Debug-2f5a4d41fd81cc02c500.json",
+					"name" : "palette",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "tvdemo::@fba20fc733f6f04a6809",
+					"jsonFile" : "target-tvdemo-Debug-9b786f0c876421035aad.json",
+					"name" : "tvdemo",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "tvdir::@ad46f73e0c9c2135b13a",
+					"jsonFile" : "target-tvdir-Debug-c7c9d3e1fa5270f6efa5.json",
+					"name" : "tvdir",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "tvedit::@a457b984b10c9c770a42",
+					"jsonFile" : "target-tvedit-Debug-4d450c178489b4573320.json",
+					"name" : "tvedit",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 6,
+					"id" : "tvforms::@65c67d41fece7a2213d4",
+					"jsonFile" : "target-tvforms-Debug-90b3d48e734cecf97aae.json",
+					"name" : "tvforms",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 7,
+					"id" : "tvhc::@4f73097479b683b9e366",
+					"jsonFile" : "target-tvhc-Debug-6945cf4c87efea57d840.json",
+					"name" : "tvhc",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "tvision::@411ffd8adc737496fe19",
+					"jsonFile" : "target-tvision-Debug-86fd5a1a56496bc355c1.json",
+					"name" : "tvision",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/miguel/source/repos/turbovision-2.2.1/out/build/x64-Debug",
+		"source" : "C:/Users/miguel/source/repos/turbovision-2.2.1"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}

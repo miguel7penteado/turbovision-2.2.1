@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\miguel\source\repos\turbovision-2.2.1\build\examples\tvdemo\CMakeFiles\tvdemo.dir\Unity\unity_1_cxx.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\miguel\source\repos\turbovision-2.2.1\build\examples\tvdemo\CMakeFiles\tvdemo.dir\Unity\unity_0_cxx.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\miguel\source\repos\turbovision-2.2.1\examples\tvdemo\ascii.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\miguel\source\repos\turbovision-2.2.1\examples\tvdemo\backgrnd.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\miguel\source\repos\turbovision-2.2.1\examples\tvdemo\calc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\miguel\source\repos\turbovision-2.2.1\examples\tvdemo\calendar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\miguel\source\repos\turbovision-2.2.1\examples\tvdemo\evntview.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\miguel\source\repos\turbovision-2.2.1\examples\tvdemo\fileview.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\miguel\source\repos\turbovision-2.2.1\examples\tvdemo\gadgets.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\miguel\source\repos\turbovision-2.2.1\examples\tvdemo\mousedlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\miguel\source\repos\turbovision-2.2.1\examples\tvdemo\puzzle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\miguel\source\repos\turbovision-2.2.1\examples\tvdemo\tvdemo1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\miguel\source\repos\turbovision-2.2.1\examples\tvdemo\tvdemo2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\miguel\source\repos\turbovision-2.2.1\examples\tvdemo\tvdemo3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\miguel\source\repos\turbovision-2.2.1\build\examples\CMakeFiles\hello.dir\Debug\cmake_pch.hxx">
+      <Filter>Precompile Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\miguel\source\repos\turbovision-2.2.1\build\examples\CMakeFiles\hello.dir\Release\cmake_pch.hxx">
+      <Filter>Precompile Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\miguel\source\repos\turbovision-2.2.1\build\examples\CMakeFiles\hello.dir\MinSizeRel\cmake_pch.hxx">
+      <Filter>Precompile Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\miguel\source\repos\turbovision-2.2.1\build\examples\CMakeFiles\hello.dir\RelWithDebInfo\cmake_pch.hxx">
+      <Filter>Precompile Header File</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\miguel\source\repos\turbovision-2.2.1\examples\tvdemo\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Precompile Header File">
+      <UniqueIdentifier>{63EB20E2-56A8-31B1-9A07-A844F9ACD4BC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{0D11C2A7-89DE-32AE-B1A7-0A7F0706D1CD}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

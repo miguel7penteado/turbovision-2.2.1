@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <ProjectOutputs>
+    <ProjectOutput>
+      <FullPath>C:\Users\miguel\source\repos\turbovision-2.2.1\build\x64\Debug\ZERO_CHECK</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\miguel\source\repos\turbovision-2.2.1\build\Debug\hello.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\miguel\source\repos\turbovision-2.2.1\build\Debug\genparts.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\miguel\source\repos\turbovision-2.2.1\build\Debug\genphone.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\miguel\source\repos\turbovision-2.2.1\build\Debug\mmenu.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\miguel\source\repos\turbovision-2.2.1\build\Debug\palette.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\miguel\source\repos\turbovision-2.2.1\build\Debug\tvdemo.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\miguel\source\repos\turbovision-2.2.1\build\Debug\tvdir.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\miguel\source\repos\turbovision-2.2.1\build\Debug\tvedit.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\miguel\source\repos\turbovision-2.2.1\build\Debug\tvforms.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\miguel\source\repos\turbovision-2.2.1\build\Debug\tvhc.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\miguel\source\repos\turbovision-2.2.1\build\x64\Debug\ALL_BUILD</FullPath>
+    </ProjectOutput>
+  </ProjectOutputs>
+  <ContentFiles />
+  <SatelliteDlls />
+  <NonRecipeFileRefs />
+</Project>

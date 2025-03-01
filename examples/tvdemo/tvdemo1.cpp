@@ -28,13 +28,13 @@
 
 #include <tvision/tv.h>
 
-#include "tvdemo.h"
-#include "tvcmds.h"
-#include "gadgets.h"
-#include "fileview.h"
-#include "puzzle.h"
-#include "demohelp.h"
-#include "evntview.h"
+#include "include/tvdemo.h"
+#include "include/tvcmds.h"
+#include "include/gadgets.h"
+#include "include/fileview.h"
+#include "include/puzzle.h"
+#include "include/demohelp.h"
+#include "include/evntview.h"
 #include <tvision/help.h>
 
 #include <stdio.h>

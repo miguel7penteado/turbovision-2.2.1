@@ -1,0 +1,40 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\miguel\\source\\repos\\turbovision-2.2.1\\build\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{EDB437F8-ADD9-3319-BBDD-46AEA45C59C7}|examples\\hello.vcxproj|C:\\Users\\miguel\\source\\repos\\turbovision-2.2.1\\hello.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "hello.cpp",
+              "DocumentMoniker": "C:\\Users\\miguel\\source\\repos\\turbovision-2.2.1\\hello.cpp",
+              "RelativeDocumentMoniker": "..\\hello.cpp",
+              "ToolTip": "C:\\Users\\miguel\\source\\repos\\turbovision-2.2.1\\hello.cpp",
+              "RelativeToolTip": "..\\hello.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAGwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-02-27T04:22:44.78Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
